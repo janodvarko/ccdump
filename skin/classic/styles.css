@@ -1,0 +1,48 @@
+/* See license.txt for terms of usage */
+
+/*************************************************************************************************/
+
+html, body {
+    margin: 0px;
+    padding: 0px;
+    font-family: Lucida Grande, Tahoma, sans-serif;
+    font-size: 12px;
+}
+
+.ccView {
+  margin: 0px;
+  width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
+}
+
+.ccView .toolbar {
+  border-bottom: 1px solid lightgray;
+}
+
+/*************************************************************************************************/
+
+.ccView BUTTON {
+    margin: 2px 0 2px 0;
+}
+
+.progressLabel {
+    margin: 0 15px 0 15px;
+}
+
+/*************************************************************************************************/
+
+.mainViewBar > .tab {
+  font-family: Lucida Grande,Tahoma,sans-serif;
+  font-size: 17px;
+}
+
+/*************************************************************************************************/
+
+.tabDocumentsBody {
+    padding: 5px;
+}
+
+.tabRootsBody {
+    padding: 5px;
+}
