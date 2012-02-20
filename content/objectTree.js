@@ -2,7 +2,7 @@
 
 define([
     "lib/domplate",
-    "lib/DomTree",
+    "lib/domTree",
     "analyzer"
 ], function(Domplate, DomTree, Analyzer) {
 
