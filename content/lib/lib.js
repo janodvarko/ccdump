@@ -1237,6 +1237,16 @@ Lib.hasProperties = function(ob)
     return false;
 }
 
+Lib.collapse = function(elt, collapsed)
+{
+    elt.setAttribute("collapsed", collapsed ? "true" : "false");
+};
+
+Lib.isCollapsed = function(elt)
+{
+    return (elt.getAttribute("collapsed") == "true") ? true : false;
+};
+
 // ********************************************************************************************* //
 
 return Lib;

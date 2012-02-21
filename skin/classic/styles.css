@@ -10,6 +10,10 @@ html, body {
     font-size: 12px;
 }
 
+*[collapsed="true"] {
+    visibility: collapse;
+}
+
 /*************************************************************************************************/
 /* Tab View */
 
@@ -31,6 +35,14 @@ html, body {
 
 .tabHomeBody .progressLabel {
     margin: 0 15px 0 15px;
+}
+
+.tabHomeBody .saveButton {
+    padding: 8px;
+    background-image: url(images/save.png);
+    background-repeat: no-repeat;
+    background-position: 0 7px;
+    cursor: pointer;
 }
 
 /* Toolbar */

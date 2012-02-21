@@ -9,8 +9,10 @@ define([
     "lib/trace",
     "objectTree",
     "tabs/search",
+    "serializer",
 ],
-function(Domplate, Lib, DomTree, TabView, TableView, Trace, ObjectTree, Search) { with (Domplate) {
+function(Domplate, Lib, DomTree, TabView, TableView, Trace, ObjectTree, Search, Serializer) {
+with (Domplate) {
 
 // ********************************************************************************************* //
 // Options
@@ -41,6 +43,7 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
         // Handlers must be passed dynamically, since HomeTab object is isntanciated.
         this.element = this.content.replace({
             onRun: this.onRun.bind(this),
+            onSave: this.onSave.bind(this),
         }, body);
     },
 
@@ -53,7 +56,8 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
                 TR({"class": "toolbar"},
                     TD(
                         BUTTON({"class": "", onclick: "$onRun"}, "Run CC Collector"),
-                        SPAN({"class": "progressLabel"})
+                        SPAN({"class": "progressLabel"}),
+                        SPAN({"class": "saveButton", onclick: "$onSave", collapsed: "true"})
                     ),
                     TD(
                         TAG(Search.Box.tag)
@@ -85,6 +89,12 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
         this.tabView.analyzer.run(this);
     },
 
+    onSave: function()
+    {
+        var text = Serializer.serializeGraph(this.tabView.analyzer.graph);
+        Serializer.saveToFile(text);
+    },
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Progress
 
@@ -103,6 +113,9 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
 
         // Create output tree
         this.renderGraph();
+
+        var button = this.element.querySelector(".saveButton");
+        Lib.collapse(button, false);
     },
 
     renderGraph: function()
@@ -152,7 +165,7 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
             command: Lib.bindFixed(this.onOption, this, "roots")
         });*/
         items.push({
-            label: "Find Documents",
+            label: "Find Zombie Documents",
             command: Lib.bindFixed(this.onSearchForDocuments, this)
         });
         items.push("-");
