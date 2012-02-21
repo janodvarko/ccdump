@@ -1,6 +1,7 @@
 /* See license.txt for terms of usage */
 
 /*************************************************************************************************/
+/* Main Page */
 
 html, body {
     margin: 0px;
@@ -9,40 +10,60 @@ html, body {
     font-size: 12px;
 }
 
-.ccView {
-  margin: 0px;
-  width: 100%;
-  max-width: 100%;
-  table-layout: fixed;
-}
+/*************************************************************************************************/
+/* Tab View */
 
-.ccView .toolbar {
-  border-bottom: 1px solid lightgray;
+.mainViewBar > .tab {
+    font-family: Lucida Grande,Tahoma,sans-serif;
+    font-size: 17px;
 }
 
 /*************************************************************************************************/
+/* Home Tab*/
 
-.ccView BUTTON {
-    margin: 2px 0 2px 0;
+.tabHomeBody .homeTable {
+    margin: 0px;
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+    overflow: hidden;
 }
 
-.progressLabel {
+.tabHomeBody .progressLabel {
     margin: 0 15px 0 15px;
 }
 
-/*************************************************************************************************/
+.tabHomeBody .description {
+    margin: 20px 20px;
+    color: gray;
+}
 
-.mainViewBar > .tab {
-  font-family: Lucida Grande,Tahoma,sans-serif;
-  font-size: 17px;
+/* Toolbar */
+.tabHomeBody .toolbar TD {
+    border-bottom: 1px solid lightgray;
+    height: 33px;
+    vertical-align: middle;
+}
+
+/* The search box is aligned to right */
+.tabHomeBody .toolbar TD:last-child {
+    text-align: right;
 }
 
 /*************************************************************************************************/
+/* Documents Tab */
 
 .tabDocumentsBody {
     padding: 5px;
 }
 
+/*************************************************************************************************/
+/* Roots Tab */
+
 .tabRootsBody {
     padding: 5px;
+}
+
+.RootsTab {
+    margin-left: 125px;
 }

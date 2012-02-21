@@ -1,5 +1,9 @@
 /* See license.txt for terms of usage */
 
+@import "resource://ccdump/skin/classic/tableView.css";
+@import "resource://ccdump/skin/classic/popupMenu.css";
+@import "resource://ccdump/skin/classic/toolbar.css";
 @import "resource://ccdump/skin/classic/domTree.css";
 @import "resource://ccdump/skin/classic/tabView.css";
 @import "resource://ccdump/skin/classic/styles.css";
+@import "resource://ccdump/skin/classic/search.css";

@@ -47,7 +47,7 @@ var content = document.getElementById("content");
 var mainView = content.repObject = new MainView();
 mainView.initialize(content);
 
-FBTrace.sysout("CCDump initialized!");
+FBTrace.sysout("about:ccdump loaded");
 
 // ********************************************************************************************* //
 }});

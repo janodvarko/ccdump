@@ -5,10 +5,21 @@ define([
     "lib/lib",
     "lib/domTree",
     "lib/tabView",
+    "lib/tableView",
     "lib/trace",
     "objectTree",
+    "tabs/search",
 ],
-function(Domplate, Lib, DomTree, TabView, Trace, ObjectTree) { with (Domplate) {
+function(Domplate, Lib, DomTree, TabView, TableView, Trace, ObjectTree, Search) { with (Domplate) {
+
+// ********************************************************************************************* //
+// Options
+
+// Options should be persistent
+var options =
+{
+    "roots": false
+}
 
 // ********************************************************************************************* //
 // Home Tab
@@ -27,23 +38,33 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
 
     onUpdateBody: function(tabView, body)
     {
-        this.element = this.content.replace({onRun: this.onRun.bind(this)}, body);
+        // Handlers must be passed dynamically, since HomeTab object is isntanciated.
+        this.element = this.content.replace({
+            onRun: this.onRun.bind(this),
+        }, body);
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Content
 
     content:
-        TABLE({"class": "ccView"},
+        TABLE({"class": "homeTable", cellpadding: 3, cellspacing: 0},
             TBODY(
-                TR(
-                    TD({"class":  "toolbar"},
+                TR({"class": "toolbar"},
+                    TD(
                         BUTTON({"class": "", onclick: "$onRun"}, "Run CC Collector"),
                         SPAN({"class": "progressLabel"})
+                    ),
+                    TD(
+                        TAG(Search.Box.tag)
                     )
                 ),
                 TR(
-                    TD({"class": "graphTree"})
+                    TD({"class": "log", colspan: 2},
+                        DIV({"class": "description"},
+                            "Run CC Collector to start analysis"
+                        )
+                    )
                 )
             )
         ),
@@ -53,7 +74,7 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
 
     onRun: function(event)
     {
-        var parentNode = this.element.querySelector(".graphTree");
+        var parentNode = this.element.querySelector(".log");
         Lib.eraseNode(parentNode);
 
         // Make sure the other tabs get refreshed.
@@ -77,10 +98,60 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
 
     onFinished: function(analyzer)
     {
-        var parentNode = this.element.querySelector(".graphTree");
-        var tree = new ObjectTree({"Graph": analyzer.graph});
+        // Update progress label.
+        this.onProgress(analyzer);
+
+        // Create output tree
+        this.renderGraph();
+    },
+
+    renderGraph: function()
+    {
+        var parentNode = this.element.querySelector(".log");
+        var tree = new ObjectTree({"Graph": this.tabView.analyzer.graph});
         tree.append(parentNode, false);
     },
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Search
+
+    onSearch: function(text, keyCode)
+    {
+        var parentNode = this.element.querySelector(".log");
+        Lib.eraseNode(parentNode);
+
+        var result = this.tabView.analyzer.findObjects(text);
+        if (!result)
+        {
+            this.renderGraph();
+            return false;
+        }
+
+        var cols = ["name", "address", "refcount", "gcmarked", "edges", "owners"];
+
+        // Render objects as a table.
+        TableView.render(parentNode, result, cols);
+
+        return true;
+    },
+
+    getSearchOptions: function()
+    {
+        var items = [];
+
+        items.push({
+            label: "Roots Only",
+            checked: options["roots"],
+            command: Lib.bindFixed(this.onOption, this, "roots")
+        });
+
+        return items;
+    },
+
+    onOption: function(name)
+    {
+        options[name] = !options[name];
+    }
 });
 
 // ********************************************************************************************* //

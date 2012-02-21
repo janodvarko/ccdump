@@ -193,7 +193,22 @@ Analyzer.prototype =
 
         for each (var edge in o.edges)
             this.getChildObjects(edge.to, res, searchGen);
-    }
+    },
+
+    findObjects: function(name)
+    {
+        if (!name)
+            return null;
+
+        var result = [];
+        for each (var o in this.graph)
+        {
+            if (o.name.indexOf(name) >= 0 || o.address.indexOf(name) >= 0)
+                result.push(o);
+        }
+
+        return result.length ? result : null;
+    },
 }
 
 // ********************************************************************************************* //
