@@ -148,19 +148,6 @@ Analyzer.prototype =
         return result;
     },
 
-    getRootObjects: function(o, res, searchGen)
-    {
-        if (o.searchMark == searchGen || o.garbage)
-            return;
-
-        o.searchMark = searchGen;
-        if (o.root)
-            res.push(o);
-
-        for each (var owner in o.owners)
-            this.getRootObjects(owner.from, res, searchGen);
-    },
-
     getRoots: function()
     {
         var collectedRoots = {};
@@ -210,14 +197,57 @@ Analyzer.prototype =
         return result.length ? result : null;
     },
 
-    findRoots: function(addr)
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+    findRoots: function(addr, onlyRoots)
     {
         var o = this.graph[addr];
         if (!o)
             return null;
 
         var res = [];
-        this.getRootObjects(o, res, ++searchGeneration);
+        this.getRootObjects(o, res, ++searchGeneration, onlyRoots);
+        return res;
+    },
+
+    getRootObjects: function(o, res, searchGen, onlyRoots)
+    {
+        if (o.searchMark == searchGen || o.garbage)
+            return;
+
+        o.searchMark = searchGen;
+        if (o.root || !onlyRoots)
+            res.push(o);
+
+        for each (var owner in o.owners)
+            this.getRootObjects(owner.from, res, searchGen, onlyRoots);
+    },
+
+    findGraph: function(addr)
+    {
+        var o = this.graph[addr];
+        if (!o)
+            return null;
+
+        var res = [];
+        this.getObjectGraph(o, res, ++searchGeneration);
+        return res;
+    },
+
+    getObjectGraph: function(o, res, searchGen)
+    {
+        if (o.searchMark == searchGen || o.garbage)
+            return;
+
+        o.searchMark = searchGen;
+        res.push(o);
+
+        for each (var edge in o.edges)
+            this.getObjectGraph(edge.to, res, searchGen);
+
+        for each (var owner in o.owners)
+            this.getObjectGraph(owner.from, res, searchGen);
+
         return res;
     }
 }
@@ -236,6 +266,25 @@ Analyzer.CCObject = function()
     this.edges = [];
     this.owners = [];
     this.searchMark = 0;
+}
+
+Analyzer.CCObject.prototype =
+{
+    clone: function()
+    {
+        var newObj = new Analyzer.CCObject();
+        newObj.name = this.name;
+        newObj.address = this.address;
+        newObj.refcount = this.refcount;
+        newObj.gcmarked = this.gcmarked;
+        newObj.root = this.root;
+        newObj.garbage = this.garbage;
+        newObj.knownEdges = this.knownEdges;
+        newObj.edges = this.edges;
+        newObj.owners = this.owners;
+        //newObj.searchMark = this.searchMark;
+        return newObj;
+    }
 }
 
 // ********************************************************************************************* //

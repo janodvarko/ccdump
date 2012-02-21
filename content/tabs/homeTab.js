@@ -10,9 +10,10 @@ define([
     "objectTree",
     "tabs/search",
     "serializer",
+    "objectLink"
 ],
-function(Domplate, Lib, DomTree, TabView, TableView, Trace, ObjectTree, Search, Serializer) {
-with (Domplate) {
+function(Domplate, Lib, DomTree, TabView, TableView, Trace, ObjectTree, Search, Serializer,
+    ObjectLink) { with (Domplate) {
 
 // ********************************************************************************************* //
 // Options
@@ -20,7 +21,8 @@ with (Domplate) {
 // xxxHonza: Options should be persistent in user preferences
 var options =
 {
-    "roots": false
+    "roots": false,
+    "searchTableView": true
 }
 
 // ********************************************************************************************* //
@@ -140,17 +142,25 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
             return false;
         }
 
-        var cols = [
-            "name",
-            {property: "address", rep: DomTree.Reps.Link},
-            {property: "refcount", alphaValue: false},
-            "gcmarked",
-            "edges",
-            "owners"
-        ];
+        if (options.searchTableView)
+        {
+            var cols = [
+                "name",
+                {property: "address", rep: ObjectLink},
+                {property: "refcount", alphaValue: false},
+                "gcmarked",
+                "edges",
+                "owners"
+            ];
 
-        // Render objects as a table.
-        TableView.render(parentNode, result, cols);
+            // Render objects as a table.
+            TableView.render(parentNode, result, cols);
+        }
+        else
+        {
+            var tree = new ObjectTree(result);
+            tree.append(parentNode);
+        }
 
         return true;
     },
@@ -168,10 +178,15 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
             label: "Find Zombie Documents",
             command: Lib.bindFixed(this.onSearchForDocuments, this)
         });
-        items.push("-");
         items.push({
             label: "Clear Results",
             command: Lib.bindFixed(this.onClearSearch, this)
+        });
+        items.push("-");
+        items.push({
+            label: "Table View",
+            checked: options["searchTableView"],
+            command: Lib.bindFixed(this.onOption, this, "searchTableView")
         });
 
         return items;

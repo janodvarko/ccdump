@@ -20,7 +20,7 @@ RootsTab.prototype = Lib.extend(TabView.Tab.prototype,
     // Tab
 
     id: "Roots",
-    label: "Roots",
+    label: "Details",
 
     bodyTag:
         DIV({"class": "RootsBody"}),
@@ -28,14 +28,18 @@ RootsTab.prototype = Lib.extend(TabView.Tab.prototype,
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Content
 
-    noRoots:
-        SPAN("No roots?"),
-
     noAnalyses:
         SPAN("Run CC Collector to start analysis"),
 
     noObject:
         SPAN("No object specified"),
+
+    invalidate: function()
+    {
+        TabView.Tab.prototype.invalidate.apply(this, arguments);
+
+        this.currObject = null;
+    },
 
     onUpdateBody: function(tabView, body)
     {
@@ -45,23 +49,38 @@ RootsTab.prototype = Lib.extend(TabView.Tab.prototype,
             return;
         }
 
-        if (!tabView.currentObject)
+        if (!this.currObject)
         {
             this.noObject.replace({}, body);
             return;
         }
 
-        var roots = tabView.analyzer.findRoots(tabView.currentObject);
-        if (Lib.hasProperties(roots))
+        var results = this.analyzeGraph(this.currGraphType);
+        if (Lib.hasProperties(results))
         {
-            var tree = new ObjectTree(roots);
+            var tree = new ObjectTree(results);
             tree.append(body);
         }
         else
         {
-            this.noRoots.replace({}, body);
+            this.noObject.replace({}, body);
         }
     },
+
+    analyzeGraph: function(type)
+    {
+        switch (type)
+        {
+        case "roots":
+            return this.tabView.analyzer.findRoots(this.currObject, true);
+
+        case "graph":
+            return this.tabView.analyzer.findGraph(this.currObject);
+
+        case "owners":
+            return this.tabView.analyzer.findRoots(this.currObject, false);
+        }
+    }
 });
 
 // ********************************************************************************************* //
