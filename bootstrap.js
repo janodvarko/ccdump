@@ -48,6 +48,7 @@ function shutdown(aData, aReason)
 
 function install(aData, aReason)
 {
+    // xxxHonza: open about:ccdump for the first time?
 }
 
 function uninstall(aData, aReason)
@@ -55,7 +56,7 @@ function uninstall(aData, aReason)
 }
 
 // ********************************************************************************************* //
-// about:cc
+// about:ccdump
 
 function AboutCC()
 {
@@ -72,9 +73,7 @@ AboutCC.prototype =
     {
         var ioService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
         var html = 'data:text/html,<!DOCTYPE html><html><head>\n' 
-            + '<link href="' + MY_URL + 'skin/classic/styles.css" rel="stylesheet" type="text/css">\n'
-            + '<link href="' + MY_URL + 'skin/classic/domTree.css" rel="stylesheet" type="text/css">\n'
-            + '<link href="' + MY_URL + 'skin/classic/tabView.css" rel="stylesheet" type="text/css">\n'
+            + '<link href="' + MY_URL + 'skin/classic/main.css" rel="stylesheet" type="text/css">\n'
             + '<script src="' + MY_URL + 'content/require.js" type="application/javascript;version=1.8"></script>\n'
             + '<script src="' + MY_URL + 'content/main.js" type="application/javascript;version=1.8"></script>\n'
             + '</head><body>\n';
