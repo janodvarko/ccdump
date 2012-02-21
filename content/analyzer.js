@@ -42,10 +42,26 @@ Analyzer.prototype =
         this.listener.disableLog = true;
         this.listener.wantAfterProcessing = true;
 
-        window.QueryInterface(Ci.nsIInterfaceRequestor).
-            getInterface(Ci.nsIDOMWindowUtils).garbageCollect(this.listener);
+        // Run CC three times to collect trash coming from this extension.
+        this.runCC(3);
+    },
 
-        this.processLog();
+    runCC: function(counter)
+    {
+        if (--counter >= 0)
+        {
+            window.QueryInterface(Ci.nsIInterfaceRequestor).
+                getInterface(Ci.nsIDOMWindowUtils).garbageCollect();
+
+            setTimeout(this.runCC.bind(this, counter), 125);
+        }
+        else
+        {
+            window.QueryInterface(Ci.nsIInterfaceRequestor).
+                getInterface(Ci.nsIDOMWindowUtils).garbageCollect(this.listener);
+
+            this.processLog();
+        }
     },
 
     processLog: function()

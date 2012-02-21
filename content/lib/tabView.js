@@ -273,6 +273,7 @@ TabView.Tab.prototype =
     invalidate: function()
     {
         this._updated = false;
+        Lib.eraseNode(this._body);
     },
 
     select: function()
