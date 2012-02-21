@@ -1224,6 +1224,9 @@ Lib.selectElementText = function(textNode, startOffset, endOffset)
 
 Lib.hasProperties = function(ob)
 {
+    if (!ob)
+        return false;
+
     if (typeof(ob) == "string")
         return false;
 

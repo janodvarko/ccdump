@@ -74,4 +74,13 @@
     color: gray;
 }
 
+.objectLink {
+    text-decoration: none;
+}
+
+.objectLink:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 /*************************************************************************************************/

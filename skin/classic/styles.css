@@ -33,11 +33,6 @@ html, body {
     margin: 0 15px 0 15px;
 }
 
-.tabHomeBody .description {
-    margin: 20px 20px;
-    color: gray;
-}
-
 /* Toolbar */
 .tabHomeBody .toolbar TD {
     border-bottom: 1px solid lightgray;
@@ -62,8 +57,4 @@ html, body {
 
 .tabRootsBody {
     padding: 5px;
-}
-
-.RootsTab {
-    margin-left: 125px;
 }

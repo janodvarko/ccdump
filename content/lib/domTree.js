@@ -230,6 +230,12 @@ function safeToString(ob)
 var OBJECTBOX =
     DIV({"class": "objectBox objectBox-$className"});
 
+var OBJECTLINK = this.OBJECTLINK =
+    A({
+        "class": "objectLink objectLink-$className",
+        _repObject: "$object"
+    });
+
 // ********************************************************************************************* //
 
 DomTree.Reps =
@@ -400,6 +406,27 @@ var Tree = domplate(DomTree.prototype,
             member.type = "tableCell";
         }
         return member;
+    }
+});
+
+DomTree.Reps.Link = domplate(DomTree.Rep,
+{
+    className: "link",
+
+    tag:
+        OBJECTLINK({onclick: "$onClick", href: "$object|getTargetUrl"},
+            "$object|getTitle"
+        ),
+
+    onClick: function(event)
+    {
+        // xxxHonza: any way how to execute a custom callback from here?
+        Lib.fireEvent(event.target, "navigate");
+    },
+
+    getTargetUrl: function(object)
+    {
+        return object + "";
     }
 });
 

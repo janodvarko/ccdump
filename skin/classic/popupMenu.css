@@ -6,6 +6,7 @@
     font-size: 11px;
     z-index: 2147483647;
     font-family: Lucida Grande, Tahoma, sans-serif;
+    white-space: nowrap;
 }
 
 .popupMenuContent {

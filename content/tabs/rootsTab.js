@@ -32,7 +32,10 @@ RootsTab.prototype = Lib.extend(TabView.Tab.prototype,
         SPAN("No roots?"),
 
     noAnalyses:
-        SPAN("Run CC Collector first"),
+        SPAN("Run CC Collector to start analysis"),
+
+    noObject:
+        SPAN("No object specified"),
 
     onUpdateBody: function(tabView, body)
     {
@@ -42,7 +45,13 @@ RootsTab.prototype = Lib.extend(TabView.Tab.prototype,
             return;
         }
 
-        var roots = tabView.analyzer.getRoots();
+        if (!tabView.currentObject)
+        {
+            this.noObject.replace({}, body);
+            return;
+        }
+
+        var roots = tabView.analyzer.findRoots(tabView.currentObject);
         if (Lib.hasProperties(roots))
         {
             var tree = new ObjectTree(roots);

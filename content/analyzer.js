@@ -155,10 +155,10 @@ Analyzer.prototype =
 
         o.searchMark = searchGen;
         if (o.root)
-            res.push(serializeObject(o));
+            res.push(o);
 
         for each (var owner in o.owners)
-            getRootObjects(owner.from, res, searchGen);
+            this.getRootObjects(owner.from, res, searchGen);
     },
 
     getRoots: function()
@@ -209,6 +209,17 @@ Analyzer.prototype =
 
         return result.length ? result : null;
     },
+
+    findRoots: function(addr)
+    {
+        var o = this.graph[addr];
+        if (!o)
+            return null;
+
+        var res = [];
+        this.getRootObjects(o, res, ++searchGeneration);
+        return res;
+    }
 }
 
 // ********************************************************************************************* //

@@ -15,7 +15,7 @@ function(Domplate, Lib, DomTree, TabView, TableView, Trace, ObjectTree, Search) 
 // ********************************************************************************************* //
 // Options
 
-// Options should be persistent
+// xxxHonza: Options should be persistent in user preferences
 var options =
 {
     "roots": false
@@ -79,7 +79,7 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
 
         // Make sure the other tabs get refreshed.
         this.tabView.getTab("Roots").invalidate();
-        this.tabView.getTab("Documents").invalidate();
+        //this.tabView.getTab("Documents").invalidate();
 
         // Run CC collctor.
         this.tabView.analyzer.run(this);
@@ -127,7 +127,14 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
             return false;
         }
 
-        var cols = ["name", "address", "refcount", "gcmarked", "edges", "owners"];
+        var cols = [
+            "name",
+            {property: "address", rep: DomTree.Reps.Link},
+            {property: "refcount", alphaValue: false},
+            "gcmarked",
+            "edges",
+            "owners"
+        ];
 
         // Render objects as a table.
         TableView.render(parentNode, result, cols);
@@ -139,10 +146,19 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
     {
         var items = [];
 
-        items.push({
+        /*items.push({
             label: "Roots Only",
             checked: options["roots"],
             command: Lib.bindFixed(this.onOption, this, "roots")
+        });*/
+        items.push({
+            label: "Find Documents",
+            command: Lib.bindFixed(this.onSearchForDocuments, this)
+        });
+        items.push("-");
+        items.push({
+            label: "Clear Results",
+            command: Lib.bindFixed(this.onClearSearch, this)
         });
 
         return items;
@@ -151,6 +167,18 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
     onOption: function(name)
     {
         options[name] = !options[name];
+    },
+
+    onSearchForDocuments: function()
+    {
+        var tab = Lib.getAncestorByClass(this.element, "tabBody");
+        Search.Box.doSearch("nsDocument", tab);
+    },
+
+    onClearSearch: function()
+    {
+        var tab = Lib.getAncestorByClass(this.element, "tabBody");
+        Search.Box.doSearch("", tab);
     }
 });
 

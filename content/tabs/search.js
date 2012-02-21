@@ -112,6 +112,16 @@ Search.Box = domplate(
 
         var searchInput = Lib.getElementByClass(document.documentElement, "searchInput");
         searchInput.removeAttribute("status");
+    },
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+    doSearch: function(text, tab)
+    {
+        var searchInput = Lib.getElementByClass(tab, "searchInput");
+        searchInput.value = text;
+
+        setTimeout(Lib.bindFixed(this.search, this, tab, 13, text));
     }
 });
 

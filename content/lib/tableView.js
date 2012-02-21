@@ -37,7 +37,7 @@ var TableView = domplate(
                         TR({"class": "focusRow dataTableRow subFocusRow", "role": "row"},
                             FOR("column", "$row|getColumns",
                                 TD({"class": "a11yFocus dataTableCell", "role": "gridcell"},
-                                    TAG("$column|getValueTag", {object: "$column"})
+                                    TAG("$column|getValueTag", {object: "$column.value"})
                                 )
                             )
                         )
@@ -46,11 +46,15 @@ var TableView = domplate(
             )
         ),
 
-    getValueTag: function(object)
+    getValueTag: function(colAndValue)
     {
-        var type = typeof(object);
+        var object = colAndValue.value;
+        var col = colAndValue.col;
+        if (col.rep)
+            return col.rep.tag;
 
         // Display embedded tree for object in table-cells
+        var type = typeof(object);
         if (type == "object")
             return DomTree.Reps.Tree.tag;
 
@@ -74,9 +78,10 @@ var TableView = domplate(
         var cols = [];
         for (var i=0; i<this.columns.length; i++)
         {
+            var col = this.columns[i];
             var prop = this.columns[i].property;
 
-            if (typeof(prop ) == "undefined")
+            if (typeof(prop) == "undefined")
             {
                 value = row;
             }
@@ -93,7 +98,7 @@ var TableView = domplate(
                 value = row[prop];
             }
 
-            cols.push(value);
+            cols.push({value: value, col: col});
         }
         return cols;
     },
@@ -246,11 +251,14 @@ var TableView = domplate(
             var col = cols[i];
             var prop = (typeof(col.property) != "undefined") ? col.property : col;
             var label = (typeof(col.label) != "undefined") ? col.label : prop;
+            var rep = (typeof(col.rep) != "undefined") ? col.rep : null;
+            var alphaValue = (typeof(col.alphaValue) != "undefined") ? col.alphaValue : true;
 
             columns.push({
                 property: prop,
                 label: label,
-                alphaValue: true
+                rep: rep,
+                alphaValue: alphaValue
             });
         }
 
