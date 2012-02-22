@@ -58,7 +58,7 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
             TBODY(
                 TR({"class": "toolbar"},
                     TD(
-                        BUTTON({"class": "", onclick: "$onRun"}, "Run CC Collector"),
+                        BUTTON({"class": "runCC", onclick: "$onRun"}, "Run CC Collector"),
                         SPAN({"class": "progressLabel"}),
                         SPAN({"class": "saveButton", onclick: "$onSave", collapsed: "true",
                             title: "Save the log into a file"})
@@ -89,8 +89,19 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
         this.tabView.getTab("Roots").invalidate();
         //this.tabView.getTab("Documents").invalidate();
 
+        // hide save log button.
+        var save = this.element.querySelector(".saveButton");
+        Lib.collapse(save, true);
+
+        // Disable the Run button
+        var runCC = this.element.querySelector(".runCC");
+        runCC.setAttribute("disabled", "true");
+
         // Run CC collctor.
         this.tabView.analyzer.run(this);
+
+        // Reset the progress info.
+        this.onProgress(this.tabView.analyzer);
     },
 
     onSave: function()
@@ -105,7 +116,7 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
     onProgress: function(analyzer)
     {
         var label = this.element.querySelector(".progressLabel");
-        label.innerHTML = Object.keys(analyzer.graph).length + " objects, " +
+        label.innerHTML = "Collecting: " + Object.keys(analyzer.graph).length + " objects, " +
             analyzer.roots.length + " roots, " +
             analyzer.garbage.length + " garbage";
     },
@@ -118,8 +129,13 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
         // Create output tree
         this.renderGraph();
 
-        var button = this.element.querySelector(".saveButton");
-        Lib.collapse(button, false);
+        // Enable the run button.
+        var runCC = this.element.querySelector(".runCC");
+        runCC.removeAttribute("disabled");
+
+        // Show save log button.
+        var save = this.element.querySelector(".saveButton");
+        Lib.collapse(save, false);
     },
 
     renderGraph: function()

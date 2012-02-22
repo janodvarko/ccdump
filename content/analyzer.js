@@ -46,7 +46,8 @@ Analyzer.prototype =
         this.listener = Cc["@mozilla.org/cycle-collector-logger;1"].
             createInstance(Ci.nsICycleCollectorListener);
 
-        // Get much bigger graph (including objects that are usually optimized out).
+        // Get much bigger graph (including objects that are usually optimized out)
+        // if the preference says so.
         if (Options.getPref("traceAll"))
             this.listener.allTraces();
 
