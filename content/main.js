@@ -43,7 +43,7 @@ MainView.prototype = Lib.extend(new TabView(),
         this.content.repObject = this;
 
         this.render(this.content);
-        this.selectTabByName("About");
+        this.selectTabByName("Home");
 
         // Listeners
         this.shutdownListener = this.shutdown.bind(this);
