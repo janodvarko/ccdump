@@ -18,7 +18,7 @@
     <!-- Front End MetaData -->
     <em:name>Cycle Collector Analyzer</em:name>
     <em:description>Display the graph created by cycle collector.</em:description>
-    <em:creator>Jan Odvarko</em:creator>
+    <em:creator>Jan Odvarko &lt;odvarko@gmail.com&gt;</em:creator>
     <em:iconURL/>
 
     <em:optionsURL/>

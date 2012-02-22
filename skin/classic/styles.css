@@ -70,3 +70,45 @@ html, body {
 .tabRootsBody {
     padding: 5px;
 }
+
+/*************************************************************************************************/
+/* About Tab */
+
+.AboutTab {
+    margin-left: 150px;
+}
+
+.tabAboutBody {
+    margin: 15px;
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+    font-size: 12px;
+}
+
+.tabAboutBody a {
+    text-decoration: none;
+}
+
+.tabAboutBody a:hover {
+    text-decoration: underline;
+}
+
+.tabAboutBody h1 {
+    font-size: 17px;
+    border-bottom: 1px solid threedlightshadow;
+}
+
+.tabAboutBody h2 {
+    color:  #DD467B;
+    font-size: 22.8px;
+    font-weight:lighter;
+}
+
+.tabAboutBody h3 {
+    color: #DD467B;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.tabAboutBody code {
+    background-color: #F9F9F9;
+}

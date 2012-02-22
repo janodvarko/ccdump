@@ -13,9 +13,11 @@ require(config, [
     "tabs/homeTab",
     "tabs/rootsTab",
     "tabs/docsTab",
+    "tabs/aboutTab",
     "analyzer"
 ],
-function(TabView, Lib, FBTrace, HomeTab, RootsTab, DocsTab, Analyzer) { with (Domplate) {
+function(TabView, Lib, FBTrace, HomeTab, RootsTab, DocsTab, AboutTab, Analyzer) {
+with (Domplate) {
 
 // ********************************************************************************************* //
 // Main Application Object
@@ -30,6 +32,7 @@ function MainView()
     this.appendTab(new HomeTab());
     this.appendTab(new RootsTab());
     //this.appendTab(new DocsTab());
+    this.appendTab(new AboutTab());
 }
 
 MainView.prototype = Lib.extend(new TabView(),
@@ -40,7 +43,7 @@ MainView.prototype = Lib.extend(new TabView(),
         this.content.repObject = this;
 
         this.render(this.content);
-        this.selectTabByName("Home");
+        this.selectTabByName("About");
 
         // Listeners
         this.shutdownListener = this.shutdown.bind(this);
