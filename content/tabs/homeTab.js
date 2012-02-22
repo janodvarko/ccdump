@@ -10,8 +10,8 @@ define([
     "objectTree",
     "tabs/search",
     "serializer",
-    "ObjectMenu",
-    "ObjectLink"
+    "objectMenu",
+    "objectLink"
 ],
 function(Domplate, Lib, DomTree, TabView, TableView, Trace, ObjectTree, Search, Serializer,
     ObjectMenu, ObjectLink) { with (Domplate) {
