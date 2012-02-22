@@ -1,6 +1,10 @@
 /* See license.txt for terms of usage */
 
-define([], function() {
+define([
+    "lib/trace",
+    "lib/options"
+],
+function(FBTrace, Options) {
 
 // ********************************************************************************************* //
 // Constants
@@ -42,7 +46,9 @@ Analyzer.prototype =
         this.listener = Cc["@mozilla.org/cycle-collector-logger;1"].
             createInstance(Ci.nsICycleCollectorListener);
 
-        //this.listener.allTraces();
+        // Get much bigger graph (including objects that are usually optimized out).
+        if (Options.getPref("traceAll"))
+            this.listener.allTraces();
 
         this.listener.disableLog = true;
         this.listener.wantAfterProcessing = true;
