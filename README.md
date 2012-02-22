@@ -6,7 +6,7 @@ After installation, open:
 
     about:ccdump
 
-Download from [addons.mozilla.org](https://addons.mozilla.org/en-US/developers/addon/cycle-collector-analyzer/).
+Download from [addons.mozilla.org](https://addons.mozilla.org/en-US/firefox/addon/cycle-collector-analyzer/).
 
 More Info
 ---------
