@@ -34,7 +34,8 @@ var TableView = domplate(
                 ),
                 TBODY({"class": "dataTableTbody", "role": "presentation"},
                     FOR("row", "$object.data|getRows",
-                        TR({"class": "focusRow dataTableRow subFocusRow", "role": "row"},
+                        TR({"class": "focusRow dataTableRow subFocusRow", "role": "row",
+                            _repObject: "$row"},
                             FOR("column", "$row|getColumns",
                                 TD({"class": "a11yFocus dataTableCell", "role": "gridcell"},
                                     TAG("$column|getValueTag", {object: "$column.value"})

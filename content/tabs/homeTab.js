@@ -10,10 +10,11 @@ define([
     "objectTree",
     "tabs/search",
     "serializer",
-    "objectLink"
+    "ObjectMenu",
+    "ObjectLink"
 ],
 function(Domplate, Lib, DomTree, TabView, TableView, Trace, ObjectTree, Search, Serializer,
-    ObjectLink) { with (Domplate) {
+    ObjectMenu, ObjectLink) { with (Domplate) {
 
 // ********************************************************************************************* //
 // Options
@@ -59,7 +60,8 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
                     TD(
                         BUTTON({"class": "", onclick: "$onRun"}, "Run CC Collector"),
                         SPAN({"class": "progressLabel"}),
-                        SPAN({"class": "saveButton", onclick: "$onSave", collapsed: "true"})
+                        SPAN({"class": "saveButton", onclick: "$onSave", collapsed: "true",
+                            title: "Save the log into a file"})
                     ),
                     TD(
                         TAG(Search.Box.tag)
@@ -145,7 +147,7 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
         if (options.searchTableView)
         {
             var cols = [
-                "name",
+                {property: "name", rep: ObjectMenu},
                 {property: "address", rep: ObjectLink},
                 {property: "refcount", alphaValue: false},
                 "gcmarked",

@@ -55,11 +55,11 @@ RootsTab.prototype = Lib.extend(TabView.Tab.prototype,
             return;
         }
 
-        var results = this.analyzeGraph(this.currGraphType);
+        var results = this.analyzeGraph(this.currGraphType, this.currObject);
         if (Lib.hasProperties(results))
         {
             var tree = new ObjectTree(results);
-            tree.append(body);
+            tree.append(body, true);
         }
         else
         {
@@ -67,21 +67,95 @@ RootsTab.prototype = Lib.extend(TabView.Tab.prototype,
         }
     },
 
-    analyzeGraph: function(type)
+    analyzeGraph: function(type, obj)
     {
+        //FBTrace.sysout("type: " + type + ", ob: " + obj, obj);
+
+        if (!obj)
+            return;
+
         switch (type)
         {
         case "roots":
-            return this.tabView.analyzer.findRoots(this.currObject, true);
+            return this.tabView.analyzer.findRoots(obj.address, true);
 
         case "graph":
-            return this.tabView.analyzer.findGraph(this.currObject);
+            return this.getAllOwners(obj);
 
-        case "owners":
-            return this.tabView.analyzer.findRoots(this.currObject, false);
+        case "details":
+            return obj;
         }
+    },
+
+    getAllOwners: function(obj)
+    {
+        var searchId = this.tabView.analyzer.getSearchId();
+        var generator = new ObjectGraphGenerator(searchId);
+        return generator.findGraph(obj);
     }
 });
+
+// ********************************************************************************************* //
+// Graph Generator
+
+/**
+ * Returns graph as a tree of owners and edges for specified object.
+ */
+function ObjectGraphGenerator(searchId)
+{
+    this.searchId = searchId;
+}
+
+ObjectGraphGenerator.prototype =
+{
+    findGraph: function(o)
+    {
+        if (!o)
+            return null;
+
+        this.counter = 0;
+
+        var res = {};
+        this.getObjectGraph(o, o.address, res);
+        return res;
+    },
+
+    getObjectGraph: function(o, name, res)
+    {
+        if (o.searchMark == this.searchId)
+            return;
+
+        o.searchMark = this.searchId;
+
+        this.counter++;
+
+        var obj = {name: o.name}
+        res[this.ensureUniqueName(res, name)] = obj;
+
+        for each (var owner in o.owners)
+        {
+            this.getObjectGraph(owner.from,
+                owner.name ? owner.name : "<unknown-owner>",
+                obj);
+        }
+
+        for each (var edge in o.edges)
+        {
+            this.getObjectGraph(edge.to,
+                edge.name ? edge.name : "<unknown-edge>",
+                obj);
+        }
+    },
+
+    ensureUniqueName: function(obj, name)
+    {
+        var newName = name;
+        var counter = 0;
+        while (obj[newName])
+            newName = name + (++counter);
+        return newName;
+    }
+}
 
 // ********************************************************************************************* //
 

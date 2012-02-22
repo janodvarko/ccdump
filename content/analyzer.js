@@ -25,6 +25,11 @@ Analyzer.prototype =
         return this.graph == null;
     },
 
+    getSearchId: function()
+    {
+        return ++searchGeneration;
+    },
+
     run: function(callback)
     {
         this.callback = callback;
@@ -199,14 +204,14 @@ Analyzer.prototype =
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    findRoots: function(addr, onlyRoots)
+    findRoots: function(addr)
     {
         var o = this.graph[addr];
         if (!o)
             return null;
 
         var res = [];
-        this.getRootObjects(o, res, ++searchGeneration, onlyRoots);
+        this.getRootObjects(o, res, ++searchGeneration);
         return res;
     },
 
@@ -216,11 +221,11 @@ Analyzer.prototype =
             return;
 
         o.searchMark = searchGen;
-        if (o.root || !onlyRoots)
+        if (o.root)
             res.push(o);
 
         for each (var owner in o.owners)
-            this.getRootObjects(owner.from, res, searchGen, onlyRoots);
+            this.getRootObjects(owner.from, res, searchGen);
     },
 
     findGraph: function(addr)

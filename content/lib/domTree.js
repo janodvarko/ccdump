@@ -128,7 +128,11 @@ DomTree.prototype = domplate(
         {
             var propObj = object[p];
             if (typeof(propObj) != "function"/* && typeof(propObj) != "number"*/)
-                members.push(this.createMember("dom", p, propObj, level));
+            {
+                var member = this.createMember("dom", p, propObj, level)
+                if (member)
+                    members.push(member);
+            }
         }
 
         return members;
