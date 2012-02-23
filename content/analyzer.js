@@ -207,7 +207,7 @@ Analyzer.prototype =
             this.getChildObjects(edge.to, res, searchGen);
     },
 
-    findObjects: function(name)
+    findObjects: function(name, caseSensitive)
     {
         if (!name)
             return null;
@@ -215,6 +215,14 @@ Analyzer.prototype =
         var result = [];
         for each (var o in this.graph)
         {
+            var oName = o.name;
+
+            if (caseSensitive)
+            {
+                oName = oName.toLowerCase();
+                name = name.toLowerCase();
+            }
+
             if (o.name.indexOf(name) >= 0 || o.address.indexOf(name) >= 0)
                 result.push(o);
         }

@@ -16,9 +16,23 @@ require(config, [
     "tabs/aboutTab",
     "analyzer",
     "tabNavigator",
+    "lib/options",
 ],
-function(TabView, Lib, FBTrace, HomeTab, RootsTab, DocsTab, AboutTab, Analyzer, TabNavigator) {
+function(TabView, Lib, FBTrace, HomeTab, RootsTab, DocsTab, AboutTab, Analyzer,
+    TabNavigator, Options) {
 with (Domplate) {
+
+// ********************************************************************************************* //
+// Application preferences
+
+// extensions.ccdump.traceAll [boolean] - if true CC graph doesn't use optimization and a lot more
+//                                      objects is included.
+//
+// extensions.ccdump.search.caseSensitive [boolean] - if true, search in the graph is
+//                                       case sensitive.
+//
+// extensions.ccdump.search.tableLayout [boolean] - if true, search results use table layout
+//                                      otherwise tree lyaout is used.
 
 // ********************************************************************************************* //
 // Main Application Object
@@ -46,6 +60,11 @@ MainView.prototype = Lib.extend(new TabView(),
 
         // Support for navigation among application tabs.
         TabNavigator.initialize(this);
+
+        // Initialize default preferences (only has an effect if the pref isn't already set)
+        Options.initPref("search.tableLayout", true);
+        Options.initPref("search.caseSensitive", false);
+        Options.initPref("traceAll", false);
 
         // Shutdown listener
         this.shutdownListener = this.shutdown.bind(this);

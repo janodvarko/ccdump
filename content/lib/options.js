@@ -60,6 +60,29 @@ Options.setPref = function(name, value)
     return value;
 }
 
+Options.tooglePref = function(name)
+{
+    var prefName = this.prefDomain + name;
+    var prefs = Services.prefs;
+
+    var type = prefTypeMap[prefs.getPrefType(prefName)];
+    FBTrace.sysout("type " + type);
+    if (type != "BoolPref")
+        return;
+
+    var value = this.getPref(name);
+    this.setPref(name, !value);
+}
+
+Options.initPref = function(name, value)
+{
+    var currValue = this.getPref(name);
+    if (typeof currValue == "undefined")
+        currValue = this.setPref(name, value);
+
+    return currValue;
+}
+
 // ********************************************************************************************* //
 
 return Options;

@@ -11,20 +11,11 @@ define([
     "tabs/search",
     "serializer",
     "objectMenu",
-    "objectLink"
+    "objectLink",
+    "lib/options",
 ],
 function(Domplate, Lib, DomTree, TabView, TableView, FBTrace, ObjectTree, Search, Serializer,
-    ObjectMenu, ObjectLink) { with (Domplate) {
-
-// ********************************************************************************************* //
-// Options
-
-// xxxHonza: Options should be persistent in user preferences
-var options =
-{
-    "roots": false,
-    "searchTableView": true
-}
+    ObjectMenu, ObjectLink, Options) { with (Domplate) {
 
 // ********************************************************************************************* //
 // Home Tab
@@ -165,7 +156,8 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
         var parentNode = this.element.querySelector(".log");
         Lib.eraseNode(parentNode);
 
-        var result = this.tabView.analyzer.findObjects(text);
+        var caseSensitive = Options.getPref("search.caseSensitive");
+        var result = this.tabView.analyzer.findObjects(text, caseSensitive);
         if (!result)
         {
             this.renderGraph();
@@ -207,15 +199,20 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
             label: "Find Zombie HTTP Elements",
             command: Lib.bindFixed(this.doSearch, this, "http")
         });
+        items.push("-");
         items.push({
             label: "Clear Search",
             command: Lib.bindFixed(this.doSearch, this, "")
         });
-        items.push("-");
         items.push({
-            label: "Table View",
-            checked: options["searchTableView"],
-            command: Lib.bindFixed(this.onOption, this, "searchTableView")
+            label: "Case Sensitive",
+            checked: Options.getPref("search.caseSensitive"),
+            command: Lib.bindFixed(this.onOption, this, "search.caseSensitive")
+        });
+        items.push({
+            label: "Table Layout",
+            checked: Options.getPref("search.tableLayout"),
+            command: Lib.bindFixed(this.onOption, this, "search.tableLayout")
         });
 
         return items;
@@ -223,7 +220,7 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
 
     onOption: function(name)
     {
-        options[name] = !options[name];
+        Options.tooglePref(name);
     },
 
     doSearch: function(text)
