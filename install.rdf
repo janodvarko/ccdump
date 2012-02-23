@@ -28,7 +28,7 @@
     <!-- Front End MetaData -->
     <em:name>Cycle Collector Analyzer, about:ccdump</em:name>
     <em:description>Display the graph created by cycle collector.</em:description>
-    <em:creator>Jan Odvarko &ltodvarko@gmail.com&gt</em:creator>
+    <em:creator>Jan Odvarko &ltodvarko@gmail.com&gt;</em:creator>
     <em:iconURL/>
 
   </Description>
