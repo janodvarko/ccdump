@@ -374,6 +374,9 @@ DomTree.Reps.Arr = domplate(DomTree.Rep,
 
     getTitle: function(object)
     {
+        if (!object.length)
+            return "";
+
         return "Array [" + object.length + "]";
     }
 });
