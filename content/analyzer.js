@@ -34,6 +34,11 @@ Analyzer.prototype =
         return ++searchGeneration;
     },
 
+    getObject: function(addr)
+    {
+        return this.graph[addr];
+    },
+
     run: function(callback)
     {
         this.callback = callback;
@@ -143,6 +148,7 @@ Analyzer.prototype =
     {
         if (!this.graph[aAddress])
             this.graph[aAddress] = new Analyzer.CCObject();
+
         return this.graph[aAddress];
     },
 
@@ -282,21 +288,6 @@ Analyzer.CCObject = function()
 
 Analyzer.CCObject.prototype =
 {
-    clone: function()
-    {
-        var newObj = new Analyzer.CCObject();
-        newObj.name = this.name;
-        newObj.address = this.address;
-        newObj.refcount = this.refcount;
-        newObj.gcmarked = this.gcmarked;
-        newObj.root = this.root;
-        newObj.garbage = this.garbage;
-        newObj.knownEdges = this.knownEdges;
-        newObj.edges = this.edges;
-        newObj.owners = this.owners;
-        //newObj.searchMark = this.searchMark;
-        return newObj;
-    }
 }
 
 // ********************************************************************************************* //

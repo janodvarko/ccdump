@@ -140,12 +140,13 @@ Lib.fixEvent = function(e)
     //return jQuery.event.fix(e || window.event);
 }
 
-Lib.fireEvent = function(element, event)
+Lib.fireEvent = function(element, event, object)
 {
     if (document.createEvent)
     {
         var evt = document.createEvent("Events");
         evt.initEvent(event, true, false); // event type,bubbling,cancelable
+        evt.object = object;
         return !element.dispatchEvent(evt);
     }
 }

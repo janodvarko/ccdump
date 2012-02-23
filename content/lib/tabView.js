@@ -6,7 +6,7 @@ define([
     "lib/trace"
 ],
 
-function(Domplate, Lib, Trace) { with (Domplate) {
+function(Domplate, Lib, FBTrace) { with (Domplate) {
 
 //*************************************************************************************************
 
@@ -64,7 +64,8 @@ var TabViewTempl = domplate(
     getTabView: function(node)
     {
         var tabView = Lib.getAncestorByClass(node, "tabView");
-        return tabView.repObject;
+        if (tabView)
+            return tabView.repObject;
     }
 });
 
@@ -164,7 +165,7 @@ TabView.prototype =
         if (!Lib.hasClass(tab, "tab"))
             return;
 
-        if (Lib.hasClass(tab, "selected"))
+        if (Lib.hasClass(tab, "selected") && tab._updated)
             return;
 
         var view = tab.getAttribute("view");
@@ -192,7 +193,7 @@ TabView.prototype =
         // which is identified by class.
         var tabBody = Lib.getElementByClass(viewBody, "tab" + view + "Body");
         if (!tabBody)
-            Trace.error("TabView.selectTab; Missing tab body", tab);
+            FBTrace.sysout("TabView.selectTab; ERROR Missing tab body", tab);
 
         viewBody.selectedTab = tab;
         viewBody.selectedBody = tabBody;
@@ -257,7 +258,7 @@ TabView.prototype =
             }
             catch (e)
             {
-                Trace.exception("TabView.appendTab; Exception ", e);
+                FBTrace.sysout("TabView.appendTab; EXCEPTION ", e);
             }
         }
 

@@ -300,7 +300,16 @@ DomTree.Rep = domplate(
     supportsObject: function(object, type)
     {
         return false;
-    }
+    },
+
+    getRepObject: function(node)
+    {
+        for (var child = node; child; child = child.parentNode)
+        {
+            if (child.repObject)
+                return child.repObject;
+        }
+    },
 });
 
 // ********************************************************************************************* //
