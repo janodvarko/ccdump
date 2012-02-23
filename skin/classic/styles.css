@@ -33,18 +33,6 @@ html, body {
     overflow: hidden;
 }
 
-.tabHomeBody .progressLabel {
-    margin: 0 15px 0 15px;
-}
-
-.tabHomeBody .saveButton {
-    padding: 8px;
-    background-image: url(images/save.png);
-    background-repeat: no-repeat;
-    background-position: 0 7px;
-    cursor: pointer;
-}
-
 /* Toolbar */
 .tabHomeBody .toolbar TD {
     border-bottom: 1px solid lightgray;
@@ -55,6 +43,23 @@ html, body {
 /* The search box is aligned to right */
 .tabHomeBody .toolbar TD:last-child {
     text-align: right;
+}
+
+.progressBox {
+    white-space: nowrap;
+}
+
+.tabHomeBody .progressLabel {
+    margin: 5px 15px 5px 15px;
+    display: inline-block;
+}
+
+.tabHomeBody .saveButton {
+    padding: 8px;
+    background-image: url(images/save.png);
+    background-repeat: no-repeat;
+    background-position: 0 7px;
+    cursor: pointer;
 }
 
 /*************************************************************************************************/

@@ -47,6 +47,7 @@ Analyzer.prototype =
         this.graph = {};
         this.roots = [];
         this.garbage = [];
+        this.edges = [];
 
         this.listener = Cc["@mozilla.org/cycle-collector-logger;1"].
             createInstance(Ci.nsICycleCollectorListener);
@@ -125,6 +126,12 @@ Analyzer.prototype =
         var toObject = this.ensureObject(aToAddress);
         fromObject.edges.push({name: aEdgeName, to: toObject});
         toObject.owners.push({name: aEdgeName, from: fromObject});
+
+        this.edges.push({
+            name: aEdgeName,
+            from: fromObject,
+            to: toObject
+        });
     },
 
     describeRoot: function(aAddress, aKnownEdges)

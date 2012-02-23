@@ -59,7 +59,9 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
                 TR({"class": "toolbar"},
                     TD(
                         BUTTON({"class": "runCC", onclick: "$onRun"}, "Run CC Collector"),
-                        SPAN({"class": "progressLabel"}),
+                        SPAN({"class": "progressBox"},
+                            SPAN({"class": "progressLabel"})
+                        ),
                         SPAN({"class": "saveButton", onclick: "$onSave", collapsed: "true",
                             title: "Save the log into a file"})
                     ),
@@ -124,7 +126,8 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
         var label = this.element.querySelector(".progressLabel");
         label.innerHTML = "Collecting: " + Object.keys(analyzer.graph).length + " objects, " +
             analyzer.roots.length + " roots, " +
-            analyzer.garbage.length + " garbage";
+            analyzer.garbage.length + " garbage, " +
+            analyzer.edges.length + " edges";
     },
 
     onFinished: function(analyzer)
@@ -193,11 +196,6 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
     {
         var items = [];
 
-        /*items.push({
-            label: "Roots Only",
-            checked: options["roots"],
-            command: Lib.bindFixed(this.onOption, this, "roots")
-        });*/
         items.push({
             label: "Find Zombie Documents",
             command: Lib.bindFixed(this.doSearch, this, "nsDocument")
