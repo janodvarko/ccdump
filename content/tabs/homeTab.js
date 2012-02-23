@@ -200,11 +200,15 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
         });*/
         items.push({
             label: "Find Zombie Documents",
-            command: Lib.bindFixed(this.onSearchForDocuments, this)
+            command: Lib.bindFixed(this.doSearch, this, "nsDocument")
+        });
+        items.push({
+            label: "Find Zombie HTTP Elements",
+            command: Lib.bindFixed(this.doSearch, this, "http")
         });
         items.push({
             label: "Clear Results",
-            command: Lib.bindFixed(this.onClearSearch, this)
+            command: Lib.bindFixed(this.doSearch, this, "")
         });
         items.push("-");
         items.push({
@@ -221,17 +225,11 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
         options[name] = !options[name];
     },
 
-    onSearchForDocuments: function()
+    doSearch: function(text)
     {
         var tab = Lib.getAncestorByClass(this.element, "tabBody");
-        Search.Box.doSearch("nsDocument", tab);
+        Search.Box.doSearch(text, tab);
     },
-
-    onClearSearch: function()
-    {
-        var tab = Lib.getAncestorByClass(this.element, "tabBody");
-        Search.Box.doSearch("", tab);
-    }
 });
 
 // ********************************************************************************************* //
