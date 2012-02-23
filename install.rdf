@@ -15,13 +15,21 @@
       </Description>
     </em:targetApplication>
 
+    <!-- SeaMonkey -->
+    <em:targetApplication>
+      <Description>
+        <em:id>{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}</em:id>
+        <em:minVersion>2.10a1</em:minVersion>
+        <em:maxVersion>2.10a1</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+    <em:optionsURL/>
+
     <!-- Front End MetaData -->
     <em:name>Cycle Collector Analyzer, about:ccdump</em:name>
     <em:description>Display the graph created by cycle collector.</em:description>
-    <em:creator>Jan Odvarko &lt;odvarko@gmail.com&gt;</em:creator>
+    <em:creator>Jan Odvarko &ltodvarko@gmail.com&gt</em:creator>
     <em:iconURL/>
-
-    <em:optionsURL/>
 
   </Description>
 </RDF>
