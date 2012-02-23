@@ -42,7 +42,7 @@ DetailsTab.prototype = Lib.extend(TabView.Tab.prototype,
             return;
         }
 
-        var tree = new ObjectTree(selection);
+        var tree = new ObjectTree({"Object": selection});
         tree.append(body, true);
     },
 });

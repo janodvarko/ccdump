@@ -62,7 +62,7 @@ ObjectGraphGenerator.prototype =
         var newName = name;
         var counter = 0;
         while (obj[newName])
-            newName = name + (++counter);
+            newName = name + " {" + (++counter) + "}";
         return newName;
     }
 }
