@@ -1033,6 +1033,29 @@ var Renderer =
         return root;
     },
 
+    appendBefore: function(args, parent, self, before)
+    {
+        this.tag.compile();
+
+        var outputs = [];
+        var html = this.renderHTML(args, outputs, self);
+
+        if (!womb || womb.ownerDocument != parent.ownerDocument)
+            womb = parent.ownerDocument.createElement("div");
+        womb.innerHTML = html;
+
+        var root = womb.firstChild;
+        while (womb.firstChild)
+            parent.insertBefore(womb.firstChild, before);
+
+        var domArgs = [root, this.tag.context, 0];
+        domArgs.push.apply(domArgs, this.tag.domArgs);
+        domArgs.push.apply(domArgs, outputs);
+        this.tag.renderDOM.apply(self ? self : this.tag.subject, domArgs);
+
+        return root;
+    },
+
     insertCols: function(args, parent, self)
     {
         this.tag.compile();

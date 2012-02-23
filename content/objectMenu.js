@@ -44,16 +44,16 @@ var ObjectMenu = domplate(DomTree.Rep,
         var items = [];
         items.push({
             label: "Show Details",
-            command: Lib.bindFixed(this.onNavigate, this, target, "details")
+            command: Lib.bindFixed(this.onNavigate, this, target, "Details")
         });
         items.push("-");
         items.push({
             label: "Show Roots",
-            command: Lib.bindFixed(this.onNavigate, this, target, "roots")
+            command: Lib.bindFixed(this.onNavigate, this, target, "Roots")
         });
         items.push({
             label: "Show Graph",
-            command: Lib.bindFixed(this.onNavigate, this, target, "graph")
+            command: Lib.bindFixed(this.onNavigate, this, target, "Graph")
         });
         return items;
     },

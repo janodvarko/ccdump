@@ -92,6 +92,23 @@ TabView.prototype =
         return tab;
     },
 
+    appendTabBefore: function(tab, tabId)
+    {
+        for (var i in this.tabs)
+        {
+            var beforeTab = this.tabs[i];
+            if (beforeTab.id == tabId)
+            {
+                this.tabs.splice(i, 0, tab);
+                tab.tabView = this;
+                return tab;
+            }
+        }
+
+        // Specified tab isn't there, so just append at the end.
+        return this.appendTab(tab);
+    },
+
     removeTab: function(tabId)
     {
         for (var i in this.tabs)
@@ -248,21 +265,40 @@ TabView.prototype =
         for (var i in this.tabs)
         {
             var tab = this.tabs[i];
-            var tabHeaderTag = tab.tabHeaderTag ? tab.tabHeaderTag : TabViewTempl.tabHeaderTag;
-            var tabBodyTag = tab.tabBodyTag ? tab.tabBodyTag : TabViewTempl.tabBodyTag;
-
-            try
-            {
-                tab._header = tabHeaderTag.append({tab:tab}, Lib.$(parentNode, "tabBar"));
-                tab._body = tabBodyTag.append({tab:tab}, Lib.$(parentNode, "tabBodies"));
-            }
-            catch (e)
-            {
-                FBTrace.sysout("TabView.appendTab; EXCEPTION ", e);
-            }
+            this.renderTab(tab, parentNode);
         }
 
         return this.element;
+    },
+
+    renderTab: function(tab, parentNode, beforeTabId)
+    {
+        var beforeTab = this.getTab(beforeTabId);
+        if (!parentNode)
+            parentNode = this.element;
+
+        var tabHeaderTag = tab.tabHeaderTag ? tab.tabHeaderTag : TabViewTempl.tabHeaderTag;
+        var tabBodyTag = tab.tabBodyTag ? tab.tabBodyTag : TabViewTempl.tabBodyTag;
+
+        try
+        {
+            if (beforeTab)
+            {
+                tab._header = tabHeaderTag.appendBefore({tab:tab}, Lib.$(parentNode, "tabBar"),
+                    undefined, beforeTab._header);
+                tab._body = tabBodyTag.appendBefore({tab:tab}, Lib.$(parentNode, "tabBodies"),
+                    undefined, beforeTab._body);
+            }
+            else
+            {
+                tab._header = tabHeaderTag.appendBefore({tab:tab}, Lib.$(parentNode, "tabBar"));
+                tab._body = tabBodyTag.appendBefore({tab:tab}, Lib.$(parentNode, "tabBodies"));
+            }
+        }
+        catch (e)
+        {
+            FBTrace.sysout("TabView.appendTab; EXCEPTION ", e);
+        }
     }
 }
 

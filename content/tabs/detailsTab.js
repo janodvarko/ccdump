@@ -6,53 +6,35 @@ define([
     "lib/trace",
     "lib/tabView",
     "objectTree",
+    "objectGraphGenerator"
 ],
 
-function(Domplate, Lib, FBTrace, TabView, ObjectTree) {
+function(Domplate, Lib, FBTrace, TabView, ObjectTree, ObjectGraphGenerator) {
 with (Domplate) {
 
 // ********************************************************************************************* //
 // Home Tab
 
-function RootsTab() {}
-RootsTab.prototype = Lib.extend(TabView.Tab.prototype,
+function DetailsTab() {}
+DetailsTab.prototype = Lib.extend(TabView.Tab.prototype,
 {
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Tab
 
-    id: "Roots",
-    label: "Roots",
+    id: "Details",
+    label: "Details",
 
     bodyTag:
-        DIV({"class": "RootsBody"}),
+        DIV({"class": "DetailsBody"}),
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Content
 
-    noAnalyses:
-        SPAN("Run CC Collector to start analysis"),
-
     noSelection:
         SPAN("No object selected"),
 
-    noRoots:
-        SPAN("No roots found"),
-
-    invalidate: function()
-    {
-        TabView.Tab.prototype.invalidate.apply(this, arguments);
-
-        this.currObject = null;
-    },
-
     onUpdateBody: function(tabView, body)
     {
-        if (tabView.analyzer.isEmpty())
-        {
-            this.noAnalyses.replace({}, body);
-            return;
-        }
-
         var selection = tabView.selection;
         if (!selection)
         {
@@ -60,22 +42,14 @@ RootsTab.prototype = Lib.extend(TabView.Tab.prototype,
             return;
         }
 
-        var results = this.tabView.analyzer.findRoots(selection.address);
-        if (results.length)
-        {
-            var tree = new ObjectTree(results);
-            tree.append(body, true);
-        }
-        else
-        {
-            this.noRoots.replace({}, body);
-        }
+        var tree = new ObjectTree(selection);
+        tree.append(body, true);
     },
 });
 
 // ********************************************************************************************* //
 
-return RootsTab;
+return DetailsTab;
 
 // ********************************************************************************************* //
 }});

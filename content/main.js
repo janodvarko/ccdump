@@ -31,8 +31,6 @@ function MainView()
 
     // Append tabs
     this.appendTab(new HomeTab());
-    this.appendTab(new RootsTab());
-    //this.appendTab(new DocsTab());
     this.appendTab(new AboutTab());
 }
 

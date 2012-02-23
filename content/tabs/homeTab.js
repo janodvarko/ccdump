@@ -85,9 +85,15 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
         var parentNode = this.element.querySelector(".log");
         Lib.eraseNode(parentNode);
 
-        // Make sure the other tabs get refreshed.
-        this.tabView.getTab("Roots").invalidate();
-        //this.tabView.getTab("Documents").invalidate();
+        // Make sure the other tabs doesn't contain any references to the current graph.
+        // It would dramatically increase number of objects in the next CC graph.
+        for each (var tab in this.tabView.tabs)
+        {
+            if (tab != this)
+                tab.invalidate();
+        }
+
+        this.tabView.selection = null;
 
         // hide save log button.
         var save = this.element.querySelector(".saveButton");

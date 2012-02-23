@@ -6,9 +6,12 @@ define([
     "lib/lib",
     "lib/trace",
     "analyzer",
-    "objectGraphGenerator"
+    "objectGraphGenerator",
+    "tabs/graphTab",
+    "tabs/detailsTab",
+    "tabs/rootsTab",
 ],
-function(Lib, FBTrace, Analyzer, ObjectGraphGenerator) {
+function(Lib, FBTrace, Analyzer, ObjectGraphGenerator, GraphTab, DetailsTab, RootsTab) {
 
 // ********************************************************************************************* //
 // Navigation among application tabs
@@ -65,13 +68,34 @@ var TabNavigator =
         FBTrace.sysout("navigator.onSelectTab; " + type + ", " + selection, selection);
 
         // Switch to target tab
-        var tab = this.tabView.getTab("Roots");
+        var tab = this.appendTab(type);
         tab.invalidate();
 
         tab.currObject = selection;
         tab.currGraphType = type;
 
+        this.tabView.selection = selection;
+
         tab.select();
+    },
+
+    appendTab: function(type)
+    {
+        var tab = this.tabView.getTab(type);
+        if (tab)
+            return tab;
+
+        var tabMap = {
+            "Graph": GraphTab,
+            "Details": DetailsTab,
+            "Roots": RootsTab,
+        };
+
+        var tabType = tabMap[type];
+        var tab = this.tabView.appendTabBefore(new tabType(), "About");
+        this.tabView.renderTab(tab, null, "About");
+
+        return tab;
     }
 };
 

@@ -6,53 +6,38 @@ define([
     "lib/trace",
     "lib/tabView",
     "objectTree",
+    "objectGraphGenerator"
 ],
 
-function(Domplate, Lib, FBTrace, TabView, ObjectTree) {
+function(Domplate, Lib, FBTrace, TabView, ObjectTree, ObjectGraphGenerator) {
 with (Domplate) {
 
 // ********************************************************************************************* //
 // Home Tab
 
-function RootsTab() {}
-RootsTab.prototype = Lib.extend(TabView.Tab.prototype,
+function GraphTab() {}
+GraphTab.prototype = Lib.extend(TabView.Tab.prototype,
 {
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Tab
 
-    id: "Roots",
-    label: "Roots",
+    id: "Graph",
+    label: "Graph",
 
     bodyTag:
-        DIV({"class": "RootsBody"}),
+        DIV({"class": "GraphBody"}),
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Content
 
-    noAnalyses:
-        SPAN("Run CC Collector to start analysis"),
-
     noSelection:
         SPAN("No object selected"),
 
-    noRoots:
-        SPAN("No roots found"),
-
-    invalidate: function()
-    {
-        TabView.Tab.prototype.invalidate.apply(this, arguments);
-
-        this.currObject = null;
-    },
+    noGraph:
+        SPAN("No graph found"),
 
     onUpdateBody: function(tabView, body)
     {
-        if (tabView.analyzer.isEmpty())
-        {
-            this.noAnalyses.replace({}, body);
-            return;
-        }
-
         var selection = tabView.selection;
         if (!selection)
         {
@@ -60,22 +45,25 @@ RootsTab.prototype = Lib.extend(TabView.Tab.prototype,
             return;
         }
 
-        var results = this.tabView.analyzer.findRoots(selection.address);
-        if (results.length)
+        var searchId = this.tabView.analyzer.getSearchId();
+        var generator = new ObjectGraphGenerator(searchId);
+        var graph = generator.findGraph(selection);
+
+        if (Lib.hasProperties(graph))
         {
-            var tree = new ObjectTree(results);
+            var tree = new ObjectTree(graph);
             tree.append(body, true);
         }
         else
         {
-            this.noRoots.replace({}, body);
+            this.noGraph.replace({}, body);
         }
     },
 });
 
 // ********************************************************************************************* //
 
-return RootsTab;
+return GraphTab;
 
 // ********************************************************************************************* //
 }});
