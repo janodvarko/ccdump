@@ -20,21 +20,10 @@ var ObjectMenu = domplate(DomTree.Rep,
             SPAN(
                 "$object|getTitle"
             ),
-            SPAN({"class": "arrow", onclick: "$onOpenOptions", _repObject: "$object"},
+            SPAN({"class": "arrow", onclick: "$onOpenOptions"},
                 "&nbsp;"
             )
         ),
-
-    onClick: function(event)
-    {
-        // xxxHonza: any way how to execute a custom callback from here?
-        //Lib.fireEvent(event.target, "navigate");
-    },
-
-    getTargetUrl: function(object)
-    {
-        return object + "";
-    },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Context Menu
@@ -55,16 +44,16 @@ var ObjectMenu = domplate(DomTree.Rep,
         var items = [];
         items.push({
             label: "Show Details",
-            command: Lib.bindFixed(this.onDisplayDetails, this, target, "details")
+            command: Lib.bindFixed(this.onNavigate, this, target, "details")
         });
         items.push("-");
         items.push({
             label: "Show Roots",
-            command: Lib.bindFixed(this.onDisplayDetails, this, target, "roots")
+            command: Lib.bindFixed(this.onNavigate, this, target, "roots")
         });
         items.push({
             label: "Show Graph",
-            command: Lib.bindFixed(this.onDisplayDetails, this, target, "graph")
+            command: Lib.bindFixed(this.onNavigate, this, target, "graph")
         });
         return items;
     },
@@ -72,18 +61,13 @@ var ObjectMenu = domplate(DomTree.Rep,
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Commands
 
-    onDisplayDetails: function(target, graphType)
+    onNavigate: function(target, type)
     {
-        var tabView = Lib.getAncestorByClass(target, "tabView").repObject;
-        var obj = Lib.getAncestorByClass(target, "dataTableRow").repObject;
-
-        // Switch tabs
-        var tab = tabView.getTab("Roots");
-        tab.invalidate();
-
-        tab.currObject = obj;
-        tab.currGraphType = graphType;
-        tab.select();
+        // Fire navigate event. It's processed by the main application object (tabView).
+        Lib.fireEvent(target, "navigate", {
+            type: type,
+            selection: this.getRepObject(target)
+        });
     },
 });
 

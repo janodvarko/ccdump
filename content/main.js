@@ -14,9 +14,10 @@ require(config, [
     "tabs/rootsTab",
     "tabs/docsTab",
     "tabs/aboutTab",
-    "analyzer"
+    "analyzer",
+    "tabNavigator",
 ],
-function(TabView, Lib, FBTrace, HomeTab, RootsTab, DocsTab, AboutTab, Analyzer) {
+function(TabView, Lib, FBTrace, HomeTab, RootsTab, DocsTab, AboutTab, Analyzer, TabNavigator) {
 with (Domplate) {
 
 // ********************************************************************************************* //
@@ -45,35 +46,20 @@ MainView.prototype = Lib.extend(new TabView(),
         this.render(this.content);
         this.selectTabByName("Home");
 
-        // Listeners
-        this.shutdownListener = this.shutdown.bind(this);
-        this.onNavigateListener = this.onNavigate.bind(this);
+        // Support for navigation among application tabs.
+        TabNavigator.initialize(this);
 
+        // Shutdown listener
+        this.shutdownListener = this.shutdown.bind(this);
         window.addEventListener("unload", this.shutdownListener, false);
-        this.content.addEventListener("navigate", this.onNavigateListener, false);
     },
 
     shutdown: function()
     {
         window.removeEventListener("unload", this.shutdownListener, false);
-        this.content.removeEventListener("navigate", this.onNavigateListener, false);
+
+        TabNavigator.shutdown();
     },
-
-    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-    onNavigate: function(event)
-    {
-        if (!event.target)
-            return;
-
-        // Set current selection
-        this.currentObject = event.target.repObject;
-
-        // Switch tabs
-        var rootsTab = this.getTab("Roots");
-        rootsTab.invalidate();
-        rootsTab.select();
-    }
 });
 
 // ********************************************************************************************* //

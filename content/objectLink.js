@@ -17,24 +17,18 @@ var ObjectLink = domplate(DomTree.Rep,
     tag:
         OBJECTLINK({href: "$object|getTargetUrl", onclick: "$onClick"}, "$object|getTitle"),
 
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Event Handlers
+
     onClick: function(event)
     {
-        var target = event.target;
+        Lib.cancelEvent(event);
 
-        FBTrace.sysout("onclick");
-        // xxxHonza: any way how to execute a custom callback from here?
-        //Lib.fireEvent(event.target, "navigate");
-
-        var tabView = Lib.getAncestorByClass(target, "tabView").repObject;
-        var obj = Lib.getAncestorByClass(target, "dataTableRow").repObject;
-
-        // Switch tabs
-        var tab = tabView.getTab("Roots");
-        tab.invalidate();
-
-        tab.currObject = obj;
-        tab.currGraphType = "details";
-        tab.select();
+        // Fire navigate event. It's processed by the main application object (tabView).
+        Lib.fireEvent(event.target, "navigate", {
+            type: "details",
+            selection: this.getRepObject(event.target)
+        });
     },
 
     getTargetUrl: function(object)

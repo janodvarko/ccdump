@@ -6,9 +6,12 @@ define([
     "lib/trace",
     "lib/tabView",
     "objectTree",
+    "analyzer",
+    "objectGraphGenerator"
 ],
 
-function(Domplate, Lib, FBTrace, TabView, ObjectTree) { with (Domplate) {
+function(Domplate, Lib, FBTrace, TabView, ObjectTree, Analyzer, ObjectGraphGenerator) {
+with (Domplate) {
 
 // ********************************************************************************************* //
 // Home Tab
@@ -94,68 +97,6 @@ RootsTab.prototype = Lib.extend(TabView.Tab.prototype,
         return generator.findGraph(obj);
     }
 });
-
-// ********************************************************************************************* //
-// Graph Generator
-
-/**
- * Returns graph as a tree of owners and edges for specified object.
- */
-function ObjectGraphGenerator(searchId)
-{
-    this.searchId = searchId;
-}
-
-ObjectGraphGenerator.prototype =
-{
-    findGraph: function(o)
-    {
-        if (!o)
-            return null;
-
-        this.counter = 0;
-
-        var res = {};
-        this.getObjectGraph(o, o.address, res);
-        return res;
-    },
-
-    getObjectGraph: function(o, name, res)
-    {
-        if (o.searchMark == this.searchId)
-            return;
-
-        o.searchMark = this.searchId;
-
-        this.counter++;
-
-        var obj = {name: o.name}
-        res[this.ensureUniqueName(res, name)] = obj;
-
-        for each (var owner in o.owners)
-        {
-            this.getObjectGraph(owner.from,
-                owner.name ? owner.name : "<unknown-owner>",
-                obj);
-        }
-
-        for each (var edge in o.edges)
-        {
-            this.getObjectGraph(edge.to,
-                edge.name ? edge.name : "<unknown-edge>",
-                obj);
-        }
-    },
-
-    ensureUniqueName: function(obj, name)
-    {
-        var newName = name;
-        var counter = 0;
-        while (obj[newName])
-            newName = name + (++counter);
-        return newName;
-    }
-}
 
 // ********************************************************************************************* //
 
