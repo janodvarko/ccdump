@@ -13,7 +13,7 @@ define([
     "objectMenu",
     "objectLink"
 ],
-function(Domplate, Lib, DomTree, TabView, TableView, Trace, ObjectTree, Search, Serializer,
+function(Domplate, Lib, DomTree, TabView, TableView, FBTrace, ObjectTree, Search, Serializer,
     ObjectMenu, ObjectLink) { with (Domplate) {
 
 // ********************************************************************************************* //
@@ -145,6 +145,9 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
         // Show save log button.
         var save = this.element.querySelector(".saveButton");
         Lib.collapse(save, false);
+
+        // Search for zombie documents by default
+        this.doSearch("nsDocument");
     },
 
     renderGraph: function()
@@ -205,7 +208,7 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
             command: Lib.bindFixed(this.doSearch, this, "http")
         });
         items.push({
-            label: "Clear Results",
+            label: "Clear Search",
             command: Lib.bindFixed(this.doSearch, this, "")
         });
         items.push("-");
