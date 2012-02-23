@@ -67,6 +67,9 @@ ObjectTree.prototype = Domplate.domplate(DomTree.prototype,
 
     getValue: function(member)
     {
+        if (!member.value)
+            FBTrace.sysout("null", member);
+
         if (member.value instanceof Analyzer.CCObject)
         {
             return member.value.name + " [ref: " + member.value.refcount + "]" +

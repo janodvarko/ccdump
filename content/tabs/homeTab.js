@@ -15,7 +15,8 @@ define([
     "lib/options",
 ],
 function(Domplate, Lib, DomTree, TabView, TableView, FBTrace, ObjectTree, Search, Serializer,
-    ObjectMenu, ObjectLink, Options) { with (Domplate) {
+    ObjectMenu, ObjectLink, Options) {
+with (Domplate) {
 
 // ********************************************************************************************* //
 // Home Tab
@@ -164,7 +165,8 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
             return false;
         }
 
-        if (options.searchTableView)
+        var tableLayout = Options.getPref("search.tableLayout");
+        if (tableLayout)
         {
             var cols = [
                 {property: "name", rep: ObjectMenu},

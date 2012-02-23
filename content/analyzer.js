@@ -212,18 +212,22 @@ Analyzer.prototype =
         if (!name)
             return null;
 
+        if (!caseSensitive)
+            name = name.toLowerCase();
+
         var result = [];
         for each (var o in this.graph)
         {
             var oName = o.name;
+            var oAddress = o.address;
 
-            if (caseSensitive)
+            if (!caseSensitive)
             {
                 oName = oName.toLowerCase();
-                name = name.toLowerCase();
+                oAddress = oAddress.toLowerCase();
             }
 
-            if (o.name.indexOf(name) >= 0 || o.address.indexOf(name) >= 0)
+            if (oName.indexOf(name) >= 0 || oAddress.indexOf(name) >= 0)
                 result.push(o);
         }
 
