@@ -22,38 +22,53 @@ html, body {
     font-size: 17px;
 }
 
+.tabBody .tabContent {
+    padding: 5px;
+}
+
 /*************************************************************************************************/
 /* Home Tab*/
 
-.tabHomeBody .homeTable {
-    margin: 0px;
-    width: 100%;
-    max-width: 100%;
-    table-layout: fixed;
-    overflow: hidden;
-}
-
-/* Toolbar */
-.tabHomeBody .toolbar TD {
-    border-bottom: 1px solid lightgray;
-    vertical-align: middle;
-}
-
-/* The search box is aligned to right */
-.tabHomeBody .toolbar TD:last-child {
-    text-align: right;
-}
-
-.progressBox {
-    white-space: nowrap;
-}
-
-.tabHomeBody .progressLabel {
-    margin: 5px 15px 5px 15px;
+.tabHomeBody .runCC {
+    background-color: #EEEEEE;
+    border: 1px solid lightgray;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
     display: inline-block;
 }
 
+.tabHomeBody .searchBox {
+    float: right;
+}
+
+.tabHomeBody .toolbar {
+    clear: both;
+    padding-bottom: 3px;
+}
+
+.tabHomeBody .runCC,
+.tabHomeBody .progressLabel,
 .tabHomeBody .saveButton {
+    margin-top: 5px;
+    margin-bottom: 1px;
+}
+
+.tabHomeBody .saveButton {
+    width: 16px;
+    height: 16px;
+    background-image: url(images/save.png)
+}
+
+.tabHomeBody .progressLabel {
+    white-space: nowrap;
+    color: gray;
+    margin-left: 10px;
+    margin-right: 10px;
+    cursor: text;
+}
+
+.tabHomeBody .save {
     padding: 8px;
     background-image: url(images/save.png);
     background-repeat: no-repeat;
@@ -78,13 +93,8 @@ html, body {
 /*************************************************************************************************/
 /* Graph Tab */
 
-.tabGraphBody .tabContent {
-    padding: 5px;
-}
-
 .tabGraphBody .toolbar {
     text-align: right;
-    padding: 5px;
 }
 
 /*************************************************************************************************/

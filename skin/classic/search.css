@@ -4,7 +4,8 @@
 /* Search */
 
 .searchBox {
-    margin-right: 3px;
+    margin: 5px;
+    display: inline-block;
 }
 
 .searchTextBox {

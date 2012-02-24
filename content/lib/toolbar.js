@@ -145,11 +145,10 @@ Toolbar.prototype =
             var tag = button.tag ? button.tag : defaultTag;
 
             var element = tag.append({button: button}, this.element);
-
             if (button.initialize)
                 button.initialize(element);
 
-            if (i<this.buttons.length-1)
+            if (i<this.buttons.length-1 && !this.noSeparators)
                 ToolbarTempl.separatorTag.append({}, this.element);
         }
 

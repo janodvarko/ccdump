@@ -30,12 +30,6 @@ GraphTab.prototype = Lib.extend(BaseTab.prototype,
     id: "Graph",
     label: "Graph",
 
-    bodyTag:
-        DIV({"class": ""},
-            DIV({"class": "tabToolbar"}),
-            DIV({"class": "tabContent"})
-        ),
-
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Content
 
@@ -95,7 +89,7 @@ GraphTab.prototype = Lib.extend(BaseTab.prototype,
                 var name = obj ? obj.name : "";
                 if (!caseSensitive)
                     name = name.toLowerCase();
-    
+
                 if (name.indexOf(text) >= 0)
                     results.push(obj);
             });

@@ -3,8 +3,7 @@
 define([
     "lib/domplate",
     "lib/lib",
-    "lib/domTree",
-    "lib/tabView",
+    "tabs/baseTab",
     "lib/trace",
     "objectTree",
     "tabs/search",
@@ -12,15 +11,16 @@ define([
     "lib/options",
     "objectTableView"
 ],
-function(Domplate, Lib, DomTree, TabView, FBTrace, ObjectTree, Search, Serializer,
-    Options, ObjectTableView) {
+function(Domplate, Lib, BaseTab, FBTrace, ObjectTree, Search, Serializer, Options,
+    ObjectTableView) {
+
 with (Domplate) {
 
 // ********************************************************************************************* //
 // Home Tab
 
 function HomeTab() {}
-HomeTab.prototype = Lib.extend(TabView.Tab,
+HomeTab.prototype = Lib.extend(BaseTab.prototype,
 {
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Tab
@@ -28,53 +28,64 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
     id: "Home",
     label: "Home",
 
-    bodyTag:
-        DIV({"class": "homeBody"}),
+    defaultContentTag:
+        DIV({"class": "description"},
+            "Run CC Collector to start analysis"
+        ),
+
+    progressToolbarItem:
+        SPAN({"class": "progressLabel toolbarButton", title: "Cycle Collector Graph Info"}),
 
     onUpdateBody: function(tabView, body)
     {
-        // Handlers must be passed dynamically, since HomeTab object is isntanciated.
-        this.element = this.content.replace({
-            onRun: this.onRun.bind(this),
-            onSave: this.onSave.bind(this),
-        }, body);
+        BaseTab.prototype.onUpdateBody.apply(this, arguments);
+
+        // hide save log button.
+        var save = this.toolbar.element.querySelector(".saveButton");
+        Lib.collapse(save, true);
+
+        var content = this.getTabContent();
+        this.defaultContentTag.replace({}, content);
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-    // Content
+    // Toolbar
 
-    content:
-        TABLE({"class": "homeTable", cellpadding: 3, cellspacing: 0},
-            TBODY(
-                TR({"class": "toolbar"},
-                    TD(
-                        BUTTON({"class": "runCC", onclick: "$onRun"}, "Run CC Collector"),
-                        SPAN({"class": "progressBox"},
-                            SPAN({"class": "progressLabel"})
-                        ),
-                        SPAN({"class": "saveButton", onclick: "$onSave", collapsed: "true",
-                            title: "Save the log into a file"})
-                    ),
-                    TD(
-                        TAG(Search.Box.tag)
-                    )
-                ),
-                TR(
-                    TD({"class": "log", colspan: 2},
-                        DIV({"class": "description"},
-                            "Run CC Collector to start analysis"
-                        )
-                    )
-                )
-            )
-        ),
+    getToolbarButtons: function()
+    {
+        this.toolbar.noSeparators = true;
+
+        var buttons = [];
+
+        buttons.push({
+            id: "run",
+            label: "Run CC Analysys",
+            tooltiptext: "Run Cycle Collector Analysys",
+            className: "runCC",
+            command: this.onRun.bind(this)
+        });
+
+        buttons.push({
+            id: "progress",
+            tag: this.progressToolbarItem
+        });
+
+        buttons.push({
+            id: "save",
+            tooltiptext: "Save the log into a file",
+            className: "saveButton",
+            command: this.onSave.bind(this)
+        });
+
+        return buttons.concat(BaseTab.prototype.getToolbarButtons.apply(this, arguments));
+    },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Event Handlers
 
     onRun: function(event)
     {
-        var parentNode = this.element.querySelector(".log");
+        var parentNode = this.getTabContent();
         Lib.eraseNode(parentNode);
 
         // Make sure the other tabs doesn't contain any references to the current graph.
@@ -88,11 +99,11 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
         this.tabView.selection = null;
 
         // hide save log button.
-        var save = this.element.querySelector(".saveButton");
+        var save = this.toolbar.element.querySelector(".saveButton");
         Lib.collapse(save, true);
 
         // Disable the Run button
-        var runCC = this.element.querySelector(".runCC");
+        var runCC = this.toolbar.element.querySelector(".runCC");
         runCC.setAttribute("disabled", "true");
 
         // Run CC collctor.
@@ -113,8 +124,8 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
 
     onProgress: function(analyzer)
     {
-        var label = this.element.querySelector(".progressLabel");
-        label.innerHTML = "Collecting: " + Object.keys(analyzer.graph).length + " objects, " +
+        var label = this.toolbar.element.querySelector(".progressLabel");
+        label.innerHTML = "Collected: " + Object.keys(analyzer.graph).length + " objects, " +
             analyzer.roots.length + " roots, " +
             analyzer.garbage.length + " garbage, " +
             analyzer.edges.length + " edges";
@@ -129,11 +140,11 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
         this.renderGraph();
 
         // Enable the run button.
-        var runCC = this.element.querySelector(".runCC");
+        var runCC = this.toolbar.element.querySelector(".runCC");
         runCC.removeAttribute("disabled");
 
         // Show save log button.
-        var save = this.element.querySelector(".saveButton");
+        var save = this.toolbar.element.querySelector(".saveButton");
         Lib.collapse(save, false);
 
         // Search for zombie documents by default
@@ -142,7 +153,7 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
 
     renderGraph: function()
     {
-        var parentNode = this.element.querySelector(".log");
+        var parentNode = this.getTabContent();
         var tree = new ObjectTree({"Graph": this.tabView.analyzer.graph});
         tree.append(parentNode, false);
     },
@@ -152,7 +163,7 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
 
     onSearch: function(text, keyCode)
     {
-        var parentNode = this.element.querySelector(".log");
+        var parentNode = this.getTabContent();
         Lib.eraseNode(parentNode);
 
         var caseSensitive = Options.getPref("search.caseSensitive");
@@ -190,33 +201,14 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
             label: "Find Zombie HTTP Elements",
             command: Lib.bindFixed(this.doSearch, this, "http")
         });
-        items.push("-");
-        items.push({
-            label: "Clear Search",
-            command: Lib.bindFixed(this.doSearch, this, "")
-        });
-        items.push({
-            label: "Case Sensitive",
-            checked: Options.getPref("search.caseSensitive"),
-            command: Lib.bindFixed(this.onOption, this, "search.caseSensitive")
-        });
-        items.push({
-            label: "Table Layout",
-            checked: Options.getPref("search.tableLayout"),
-            command: Lib.bindFixed(this.onOption, this, "search.tableLayout")
-        });
 
-        return items;
-    },
-
-    onOption: function(name)
-    {
-        Options.tooglePref(name);
+        // Also append derived search options.
+        return items.concat(BaseTab.prototype.getSearchOptions.apply(this, arguments));
     },
 
     doSearch: function(text)
     {
-        var tab = Lib.getAncestorByClass(this.element, "tabBody");
+        var tab = Lib.getAncestorByClass(this.getTabContent(), "tabBody");
         Search.Box.doSearch(text, tab);
     },
 });

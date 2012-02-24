@@ -11,28 +11,13 @@ require(config, [
     "lib/lib",
     "lib/trace",
     "tabs/homeTab",
-    "tabs/rootsTab",
-    "tabs/docsTab",
     "tabs/aboutTab",
     "analyzer",
     "tabNavigator",
     "lib/options",
 ],
-function(TabView, Lib, FBTrace, HomeTab, RootsTab, DocsTab, AboutTab, Analyzer,
-    TabNavigator, Options) {
+function(TabView, Lib, FBTrace, HomeTab, AboutTab, Analyzer, TabNavigator, Options) {
 with (Domplate) {
-
-// ********************************************************************************************* //
-// Application preferences
-
-// extensions.ccdump.traceAll [boolean] - if true CC graph doesn't use optimization and a lot more
-//                                      objects is included.
-//
-// extensions.ccdump.search.caseSensitive [boolean] - if true, search in the graph is
-//                                       case sensitive.
-//
-// extensions.ccdump.search.tableLayout [boolean] - if true, search results use table layout
-//                                      otherwise tree lyaout is used.
 
 // ********************************************************************************************* //
 // Main Application Object
@@ -62,6 +47,7 @@ MainView.prototype = Lib.extend(new TabView(),
         TabNavigator.initialize(this);
 
         // Initialize default preferences (only has an effect if the pref isn't already set)
+        // The default pref domain is: "extensions.ccdump."
         Options.initPref("search.tableLayout", true);
         Options.initPref("search.caseSensitive", false);
         Options.initPref("traceAll", false);
@@ -82,8 +68,14 @@ MainView.prototype = Lib.extend(new TabView(),
 // ********************************************************************************************* //
 // Initialization
 
-new MainView().initialize(content);
-FBTrace.sysout("about:ccdump loaded");
+try
+{
+    var mainView = new MainView().initialize(content);
+}
+catch (err)
+{
+    FBTrace.sysout("EXCEPTION " + err, err);
+}
 
 // ********************************************************************************************* //
 }});

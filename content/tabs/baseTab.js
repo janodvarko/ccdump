@@ -43,6 +43,11 @@ BaseTab.prototype = Lib.extend(TabView.Tab.prototype,
         this.toolbar.render(body.querySelector(".tabToolbar"));
     },
 
+    getTabContent: function()
+    {
+        return this._body.querySelector(".tabContent");
+    },
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Toolbar
 
@@ -64,12 +69,18 @@ BaseTab.prototype = Lib.extend(TabView.Tab.prototype,
 
     onSearch: function(text, keyCode)
     {
+        // TODO: implement in derived tabs.
     },
 
     getSearchOptions: function()
     {
         var items = [];
 
+        items.push("-");
+        items.push({
+            label: "Clear Search Results",
+            command: Lib.bindFixed(this.doSearch, this, "")
+        });
         items.push({
             label: "Case Sensitive",
             checked: Options.getPref("search.caseSensitive"),
