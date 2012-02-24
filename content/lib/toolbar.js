@@ -27,12 +27,14 @@ var ToolbarTempl = domplate(
         ),
 
     dropDownTag:
-        SPAN({"class": "$button|getClassName toolbarButton dropDown",
-            _repObject: "$button",
-            title: "$button.tooltiptext",
-            $text: "$button|hasLabel", onclick: "$onDropDown"},
-            "$button|getLabel",
-            SPAN({"class": "arrow"})
+        SPAN({"class": "$button|getClassName toolbarButton dropDown", _repObject: "$button",
+            $text: "$button|hasLabel", onclick: "$onCommand"},
+            SPAN({"class": "labelBox", title: "$button.tooltiptext"},
+                "$button|getLabel"
+            ),
+            SPAN({"class": "dropMarker", onclick: "$onDropDown"},
+                SPAN({"class": "arrow"})
+            )
         ),
 
     separatorTag:
@@ -66,16 +68,42 @@ var ToolbarTempl = domplate(
         Lib.cancelEvent(e);
     },
 
-    onDropDown: function(event)
+    onCommand: function(event)
     {
-        var e = $.event.fix(event || window.event);
+        var e = Lib.fixEvent(event);
+        Lib.cancelEvent(e);
 
         var target = e.target;
-        var button = Lib.getAncestorByClass(target, "toolbarButton");
-        var items = button.repObject.items;
+        var element = Lib.getAncestorByClass(target, "toolbarButton");
+        var button = element.repObject;
 
-        var menu = new Menu({id: "toolbarContextMenu", items: items});
-        menu.showPopup(button);
+        if (button.command)
+        {
+            button.command();
+        }
+        else if (button.getItems)
+        {
+            var menu = new Menu({id: "toolbarContextMenu", items: button.getItems()});
+            menu.showPopup(element);
+        }
+    },
+
+    onDropDown: function(event)
+    {
+        var e = Lib.fixEvent(event);
+
+        var target = e.target;
+        var element = Lib.getAncestorByClass(target, "toolbarButton");
+        var button = element.repObject;
+
+        if (!(button.getItems && button.command))
+            return;
+
+        Lib.cancelEvent(e);
+
+        var dropMarker = Lib.getAncestorByClass(target, "dropMarker");
+        var menu = new Menu({id: "toolbarContextMenu", items: button.getItems()});
+        menu.showPopup(dropMarker);
     }
 });
 
@@ -141,10 +169,20 @@ Toolbar.prototype =
         for (var i=0; i<this.buttons.length; i++)
         {
             var button = this.buttons[i];
-            var defaultTag = button.items ? ToolbarTempl.dropDownTag : ToolbarTempl.buttonTag;
+            var defaultTag = button.getItems ? ToolbarTempl.dropDownTag : ToolbarTempl.buttonTag;
             var tag = button.tag ? button.tag : defaultTag;
 
             var element = tag.append({button: button}, this.element);
+
+            // If its dropdown with associated command the arrow is working
+            // as an independent drop marker. Otherwise, clicking anywhere in
+            // the button show a drop down menu.
+            if (button.getItems && button.command)
+            {
+                var dropMarker = Lib.getElementByClass(element, "dropMarker");
+                Lib.setClass(dropMarker, "menuButton");
+            }
+
             if (button.initialize)
                 button.initialize(element);
 

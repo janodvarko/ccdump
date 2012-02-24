@@ -29,13 +29,8 @@ html, body {
 /*************************************************************************************************/
 /* Home Tab*/
 
-.tabHomeBody .runCC {
-    background-color: #EEEEEE;
-    border: 1px solid lightgray;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    display: inline-block;
+.tabHomeBody .toolbarButton {
+    margin: 6px 5px 2px 5px;
 }
 
 .tabHomeBody .searchBox {
@@ -47,13 +42,6 @@ html, body {
     padding-bottom: 3px;
 }
 
-.tabHomeBody .runCC,
-.tabHomeBody .progressLabel,
-.tabHomeBody .saveButton {
-    margin-top: 5px;
-    margin-bottom: 1px;
-}
-
 .tabHomeBody .saveButton {
     width: 16px;
     height: 16px;
@@ -63,8 +51,6 @@ html, body {
 .tabHomeBody .progressLabel {
     white-space: nowrap;
     color: gray;
-    margin-left: 10px;
-    margin-right: 10px;
     cursor: text;
 }
 

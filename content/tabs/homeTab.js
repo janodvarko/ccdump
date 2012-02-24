@@ -9,7 +9,8 @@ define([
     "tabs/search",
     "serializer",
     "lib/options",
-    "objectTableView"
+    "objectTableView",
+    "tabs/graphTab"
 ],
 function(Domplate, Lib, BaseTab, FBTrace, ObjectTree, Search, Serializer, Options,
     ObjectTableView) {
@@ -57,12 +58,21 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
 
         var buttons = [];
 
+        /*buttons.push({
+            id: "cleanUp",
+            label: "Clean Up",
+            tooltiptext: "Trash all collected data",
+            className: "cleanUp",
+            command: this.onCleanUp.bind(this)
+        });*/
+
         buttons.push({
             id: "run",
             label: "Run CC Analysys",
             tooltiptext: "Run Cycle Collector Analysys",
             className: "runCC",
-            command: this.onRun.bind(this)
+            command: this.onRun.bind(this),
+            getItems: this.getRunOptions.bind(this)
         });
 
         buttons.push({
@@ -78,6 +88,15 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         });
 
         return buttons.concat(BaseTab.prototype.getToolbarButtons.apply(this, arguments));
+    },
+
+    getRunOptions: function()
+    {
+        return [{
+            label: "Trace All",
+            checked: Options.getPref("traceAll"),
+            command: this.onOption.bind(this, "traceAll")
+        }];
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -117,6 +136,11 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
     {
         var text = Serializer.serializeGraph(this.tabView.analyzer.graph);
         Serializer.saveToFile(text);
+    },
+
+    onCleanUp: function()
+    {
+        
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

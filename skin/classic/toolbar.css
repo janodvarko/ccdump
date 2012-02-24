@@ -19,17 +19,6 @@
     -moz-box-sizing: padding-box;
 }
 
-.toolbarButton.dropDown .arrow {
-    width: 11px;
-    height: 10px;
-    background: url(images/contextMenuTarget.png) no-repeat;
-    display: inline-block;
-    margin-left: 3px;
-    position: relative;
-    right: 0;
-    top: 1px;
-}
-
 .toolbarButton.image {
     padding: 0;
     height: 16px;
@@ -39,21 +28,56 @@
 .toolbarButton.text,
 .toolbarSeparator {
     margin: 3px 0 3px 0;
-    padding: 3px;
+    padding: 4px;
     border: 1px solid transparent;
 }
 
-.toolbarButton.text:hover {
-    background: url(images/bg-button.gif) repeat-x scroll 0 0 #FFFFFF;
-    border-top:1px solid #bbb;
-    border-bottom:1px solid #aaa;
-    border-left:1px solid #bbb;
-    border-right:1px solid #aaa;
+.toolbarButton.text {
+    background-color: #EEEEEE;
+    border: 1px solid lightgray;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
+    display: inline-block;
+}
+
+.toolbarButton.text:hover {
+    background-color: rgb(244, 244, 244);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .toolbarButton.text:active {
     background-position: 0 -400px;
+}
+
+/*************************************************************************************************/
+/* Drop Down */
+
+.toolbarButton.dropDown .arrow {
+    width: 11px;
+    height: 10px;
+    background: url(images/contextMenuTarget.png) no-repeat;
+    display: inline-block;
+    position: relative;
+    right: 0;
+    top: 1px;
+}
+
+.toolbarButton.dropDown {
+    padding: 0;
+}
+
+.toolbarButton.dropDown .labelBox,
+.toolbarButton.dropDown .dropMarker {
+    padding: 4px;
+    display: inline-block;
+}
+
+.toolbarButton.dropDown .dropMarker.menuButton {
+    border-left: 1px solid lightgray;
+}
+
+.toolbarButton.dropDown .dropMarker.menuButton:hover {
+    background-color: rgb(250, 250, 250);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
