@@ -5,17 +5,15 @@ define([
     "lib/lib",
     "lib/domTree",
     "lib/tabView",
-    "lib/tableView",
     "lib/trace",
     "objectTree",
     "tabs/search",
     "serializer",
-    "objectMenu",
-    "objectLink",
     "lib/options",
+    "objectTableView"
 ],
-function(Domplate, Lib, DomTree, TabView, TableView, FBTrace, ObjectTree, Search, Serializer,
-    ObjectMenu, ObjectLink, Options) {
+function(Domplate, Lib, DomTree, TabView, FBTrace, ObjectTree, Search, Serializer,
+    Options, ObjectTableView) {
 with (Domplate) {
 
 // ********************************************************************************************* //
@@ -168,17 +166,8 @@ HomeTab.prototype = Lib.extend(TabView.Tab,
         var tableLayout = Options.getPref("search.tableLayout");
         if (tableLayout)
         {
-            var cols = [
-                {property: "name", rep: ObjectMenu},
-                {property: "address", rep: ObjectLink},
-                {property: "refcount", alphaValue: false},
-                "gcmarked",
-                "edges",
-                "owners"
-            ];
-
             // Render objects as a table.
-            TableView.render(parentNode, result, cols);
+            ObjectTableView.render(parentNode, result);
         }
         else
         {

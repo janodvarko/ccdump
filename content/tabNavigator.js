@@ -41,8 +41,6 @@ var TabNavigator =
         try
         {
             var eventObj = event.object;
-            FBTrace.sysout("navigator.onNavigate; " + eventObj.type, eventObj);
-
             this.onSelectTab(eventObj.type, eventObj.selection);
         }
         catch (err)
@@ -64,8 +62,6 @@ var TabNavigator =
 
         if (selection instanceof ObjectGraphGenerator.Object)
             selection = selection._o;
-
-        FBTrace.sysout("navigator.onSelectTab; " + type + ", " + selection, selection);
 
         // Switch to target tab
         var tab = this.appendTab(type);

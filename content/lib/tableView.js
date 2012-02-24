@@ -204,7 +204,7 @@ var TableView = domplate(
         }
 
         if (typeof(firstRow) != "object")
-            return [{label: Strings.objectProperties}];
+            return [{label: "Properties"}];
 
         // Put together a column property, label and type (type for default sorting logic).
         var header = [];

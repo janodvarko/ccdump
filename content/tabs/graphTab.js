@@ -4,19 +4,25 @@ define([
     "lib/domplate",
     "lib/lib",
     "lib/trace",
-    "lib/tabView",
+    "tabs/BaseTab",
+    "lib/options",
     "objectTree",
-    "objectGraphGenerator"
+    "objectGraphGenerator",
+    "objectTableView"
 ],
 
-function(Domplate, Lib, FBTrace, TabView, ObjectTree, ObjectGraphGenerator) {
+function(Domplate, Lib, FBTrace, BaseTab, Options, ObjectTree, ObjectGraphGenerator,
+    ObjectTableView) {
 with (Domplate) {
 
 // ********************************************************************************************* //
 // Home Tab
 
-function GraphTab() {}
-GraphTab.prototype = Lib.extend(TabView.Tab.prototype,
+function GraphTab()
+{
+}
+
+GraphTab.prototype = Lib.extend(BaseTab.prototype,
 {
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Tab
@@ -25,7 +31,10 @@ GraphTab.prototype = Lib.extend(TabView.Tab.prototype,
     label: "Graph",
 
     bodyTag:
-        DIV({"class": "GraphBody"}),
+        DIV({"class": ""},
+            DIV({"class": "tabToolbar"}),
+            DIV({"class": "tabContent"})
+        ),
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Content
@@ -38,28 +47,116 @@ GraphTab.prototype = Lib.extend(TabView.Tab.prototype,
 
     onUpdateBody: function(tabView, body)
     {
-        var selection = tabView.selection;
-        if (!selection)
+        BaseTab.prototype.onUpdateBody.apply(this, arguments);
+
+        var content = body.querySelector(".tabContent");
+        this.selection = tabView.selection;
+        if (!this.selection)
         {
-            this.noSelection.replace({}, body);
+            this.noSelection.replace({}, content);
             return;
         }
 
         var searchId = this.tabView.analyzer.getSearchId();
         var generator = new ObjectGraphGenerator(searchId);
-        var graph = generator.findGraph(selection);
+        this.graph = generator.findGraph(this.selection);
 
-        if (Lib.hasProperties(graph))
+        if (Lib.hasProperties(this.graph))
         {
-            var tree = new ObjectTree(graph);
-            tree.append(body, true);
+            var tree = new ObjectTree(this.graph);
+            tree.append(content, true);
         }
         else
         {
-            this.noGraph.replace({}, body);
+            this.noGraph.replace({}, content);
         }
     },
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Search
+
+    onSearch: function(text, keyCode)
+    {
+        if (!this.graph)
+            return;
+
+        var results = [];
+
+        if (text)
+        {
+            var caseSensitive = Options.getPref("search.caseSensitive");
+            if (!caseSensitive)
+                text = text.toLowerCase();
+
+            var iterator = new GraphIterator(this.graph);
+            var searchId = this.tabView.analyzer.getSearchId();
+            iterator.run(searchId, function(obj)
+            {
+                var name = obj ? obj.name : "";
+                if (!caseSensitive)
+                    name = name.toLowerCase();
+    
+                if (name.indexOf(text) >= 0)
+                    results.push(obj);
+            });
+        }
+
+        var content = this._body.querySelector(".tabContent");
+        Lib.eraseNode(content);
+
+        if (!results.length)
+        {
+            var tree = new ObjectTree(this.graph);
+            tree.append(content, true);
+            return false;
+        }
+
+        ObjectTableView.render(content, results);
+
+        return true;
+    },
+
+    getSearchOptions: function()
+    {
+        var items = BaseTab.prototype.getSearchOptions.apply(this, arguments);
+
+        return items;
+    },
 });
+
+// ********************************************************************************************* //
+
+function GraphIterator(graph)
+{
+    this.graph = graph;
+}
+
+GraphIterator.prototype =
+{
+    run: function(searchId, callback)
+    {
+        this.searchId = searchId;
+        this.callback = callback;
+
+        this._iterate(this.graph);
+    },
+
+    _iterate: function(obj)
+    {
+        if (obj.searchMark == this.searchId)
+            return;
+
+        obj.searchMark = this.searchId;
+
+        this.callback(obj._o);
+
+        for each (var child in obj)
+        {
+            if (child instanceof ObjectGraphGenerator.Object)
+                this._iterate(child);
+        }
+    }
+}
 
 // ********************************************************************************************* //
 

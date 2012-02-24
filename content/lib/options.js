@@ -66,7 +66,6 @@ Options.tooglePref = function(name)
     var prefs = Services.prefs;
 
     var type = prefTypeMap[prefs.getPrefType(prefName)];
-    FBTrace.sysout("type " + type);
     if (type != "BoolPref")
         return;
 

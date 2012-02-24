@@ -1,15 +1,15 @@
 /* See license.txt for terms of usage */
 
-require.def("domplate/toolbar", [
-    "domplate/domplate",
-    "core/lib",
-    "core/trace",
-    "domplate/popupMenu"
+define([
+    "lib/domplate",
+    "lib/lib",
+    "lib/trace",
+    "lib/popupMenu"
 ],
 
 function(Domplate, Lib, Trace, Menu) { with (Domplate) {
 
-//*************************************************************************************************
+// ********************************************************************************************* //
 
 /**
  * @domplate Represents a toolbar widget.
@@ -60,7 +60,7 @@ var ToolbarTempl = domplate(
 
     onClick: function(event)
     {
-        var e = $.event.fix(event || window.event);
+        var e = Lib.fixEvent(event);
 
         // Cancel button clicks so they are not propagated further.
         Lib.cancelEvent(e);
@@ -157,7 +157,9 @@ Toolbar.prototype =
     }
 };
 
+// ********************************************************************************************* //
+
 return Toolbar;
 
-// ************************************************************************************************
+// ********************************************************************************************* //
 }});

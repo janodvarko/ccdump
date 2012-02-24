@@ -36,7 +36,6 @@ html, body {
 /* Toolbar */
 .tabHomeBody .toolbar TD {
     border-bottom: 1px solid lightgray;
-    height: 33px;
     vertical-align: middle;
 }
 
@@ -79,7 +78,12 @@ html, body {
 /*************************************************************************************************/
 /* Graph Tab */
 
-.tabGraphBody {
+.tabGraphBody .tabContent {
+    padding: 5px;
+}
+
+.tabGraphBody .toolbar {
+    text-align: right;
     padding: 5px;
 }
 
