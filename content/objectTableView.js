@@ -2,20 +2,56 @@
 
 define([
     "lib/domplate",
-    "lib/domTree",
+    "lib/trace",
     "lib/TableView",
     "objectMenu",
     "objectLink",
+    "lib/domTree",
+    "lib/options",
 ],
-function(Domplate, FBTrace, TableView, ObjectMenu, ObjectLink) {
+function(Domplate, FBTrace, TableView, ObjectMenu, ObjectLink, DomTree, Options) {
+with (Domplate) {
 
 // ********************************************************************************************* //
 
-var ObjectTableView = Domplate.domplate(TableView,
+var Index = domplate(DomTree.Reps.Number,
 {
-    render: function(parentNode, data, cols)
+    className: "indexNumber",
+});
+
+// ********************************************************************************************* //
+
+function ObjectTableView()
+{
+}
+
+ObjectTableView.prototype = domplate(TableView.prototype,
+{
+    getValueTag: function(colAndValue)
+    {
+        if (colAndValue.col.property == "index")
+            return Index.tag;
+
+        return TableView.prototype.getValueTag.apply(this, arguments);
+    },
+
+    getProps: function(obj)
+    {
+        var index = 1;
+        var arr = [];
+        for (var p in obj)
+        {
+            var value = obj[p];
+            value.index = index++;
+            arr.push(value);
+        }
+        return arr;
+    },
+
+    render: function(parentNode, data, cols, limit)
     {
         cols = cols || [
+            {property: "index", label: " "},
             {property: "name", rep: ObjectMenu},
             {property: "address", rep: ObjectLink},
             {property: "refcount", alphaValue: false},
@@ -24,7 +60,8 @@ var ObjectTableView = Domplate.domplate(TableView,
             "owners"
         ];
 
-        TableView.render.call(this, parentNode, data, cols);
+        limit = limit || Options.getPref("tableViewLimit");
+        TableView.prototype.render.call(this, parentNode, data, cols, limit);
     }
 });
 
@@ -33,4 +70,4 @@ var ObjectTableView = Domplate.domplate(TableView,
 return ObjectTableView;
 
 // ********************************************************************************************* //
-});
+}});

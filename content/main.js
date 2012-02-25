@@ -52,6 +52,7 @@ MainView.prototype = Lib.extend(new TabView(),
         Options.initPref("search.caseSensitive", false);
         Options.initPref("search.useRegExp", false);
         Options.initPref("traceAll", false);
+        Options.initPref("tableViewLimit", 500);
 
         // Shutdown listener
         this.shutdownListener = this.shutdown.bind(this);

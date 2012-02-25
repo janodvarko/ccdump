@@ -284,15 +284,15 @@ TabView.prototype =
         {
             if (beforeTab)
             {
-                tab._header = tabHeaderTag.appendBefore({tab:tab}, Lib.$(parentNode, "tabBar"),
+                tab._header = tabHeaderTag.insertBefore({tab:tab}, Lib.$(parentNode, "tabBar"),
                     undefined, beforeTab._header);
-                tab._body = tabBodyTag.appendBefore({tab:tab}, Lib.$(parentNode, "tabBodies"),
+                tab._body = tabBodyTag.insertBefore({tab:tab}, Lib.$(parentNode, "tabBodies"),
                     undefined, beforeTab._body);
             }
             else
             {
-                tab._header = tabHeaderTag.appendBefore({tab:tab}, Lib.$(parentNode, "tabBar"));
-                tab._body = tabBodyTag.appendBefore({tab:tab}, Lib.$(parentNode, "tabBodies"));
+                tab._header = tabHeaderTag.insertBefore({tab:tab}, Lib.$(parentNode, "tabBar"));
+                tab._body = tabBodyTag.insertBefore({tab:tab}, Lib.$(parentNode, "tabBodies"));
             }
         }
         catch (e)

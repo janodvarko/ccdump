@@ -96,16 +96,11 @@ GraphTab.prototype = Lib.extend(BaseTab.prototype,
         }
 
         var content = this._body.querySelector(".tabContent");
-        Lib.eraseNode(content);
-
         if (!results.length)
-        {
-            var tree = new ObjectTree(this.graph);
-            tree.append(content, true);
-            return false;
-        }
+            return;
 
-        ObjectTableView.render(content, results);
+        var table = new ObjectTableView();
+        table.render(content, results);
 
         return true;
     },

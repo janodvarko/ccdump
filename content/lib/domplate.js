@@ -1033,7 +1033,7 @@ var Renderer =
         return root;
     },
 
-    appendBefore: function(args, parent, self, before)
+    insertBefore: function(args, parent, self, before)
     {
         this.tag.compile();
 

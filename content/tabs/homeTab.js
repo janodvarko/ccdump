@@ -31,19 +31,14 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
 
     defaultContentTag:
         DIV({"class": "description"},
-            "Run CC Collector to start analysis"
+            "Run CC Analysis to start hunting memory leaks"
         ),
 
     progressToolbarItem:
         SPAN({"class": "progressLabel toolbarButton", title: "Cycle Collector Graph Info"}),
 
-    onUpdateBody: function(tabView, body)
-    {
-        BaseTab.prototype.onUpdateBody.apply(this, arguments);
-
-        // Set UI into the default state.
-        this.resetUI();
-    },
+    noResults:
+        SPAN("No Results"),
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Toolbar
@@ -93,6 +88,21 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
             checked: Options.getPref("traceAll"),
             command: this.onOption.bind(this, "traceAll")
         }];
+    },
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Content
+
+    onUpdateBody: function(tabView, body)
+    {
+        BaseTab.prototype.onUpdateBody.apply(this, arguments);
+
+        // Set UI into the default state.
+        this.resetUI();
+
+        // Display the default content
+        var content = this.getTabContent();
+        this.defaultContentTag.replace({}, content);
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -154,10 +164,6 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         this.toolbar.hideButton("save");
         this.toolbar.disableButton("cleanUp");
         this.toolbar.disableButton("search");
-
-        // Display the default content
-        var content = this.getTabContent();
-        this.defaultContentTag.replace({}, content);
     },
 
     enableUI: function()
@@ -189,15 +195,17 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         this.enableUI();
         this.renderGraph();
 
-        // Search for zombie documents by default
-        this.doSearch("nsDocument");
+        // Do automatic search if there is something in the search box.
+        var text = Search.Box.getValue(this.getSearchBox());
+        if (text)
+            this.doSearch(text);
     },
 
     renderGraph: function()
     {
         var parentNode = this.getTabContent();
-        var tree = new ObjectTree({"Graph": this.tabView.analyzer.graph});
-        tree.append(parentNode, false);
+        var table = new ObjectTableView();
+        table.render(parentNode, this.tabView.analyzer.graph);
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -218,9 +226,15 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
 
         var finder = new ObjectFinder(this.tabView.analyzer.graph);
         var result = finder.findObjects(text, caseSensitive, useRegExp);
-        if (!result)
+        if (!result && !text)
         {
             this.renderGraph();
+            return false;
+        }
+
+        if (!result)
+        {
+            this.noResults.append({}, parentNode);
             return false;
         }
 
@@ -228,7 +242,8 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         if (tableLayout)
         {
             // Render objects as a table.
-            ObjectTableView.render(parentNode, result);
+            var table = new ObjectTableView();
+            table.render(parentNode, result);
         }
         else
         {

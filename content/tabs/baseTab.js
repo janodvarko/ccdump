@@ -107,6 +107,11 @@ BaseTab.prototype = Lib.extend(TabView.Tab.prototype,
     {
         Options.tooglePref(name);
     },
+
+    getSearchBox: function()
+    {
+        return Lib.getElementByClass(this._body, "searchBox");
+    }
 });
 
 // ********************************************************************************************* //

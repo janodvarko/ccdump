@@ -5,10 +5,10 @@ define([
     "lib/lib",
     "lib/trace",
     "lib/tabView",
-    "objectTree",
+    "objectTableView",
 ],
 
-function(Domplate, Lib, FBTrace, TabView, ObjectTree) {
+function(Domplate, Lib, FBTrace, TabView, ObjectTableView) {
 with (Domplate) {
 
 // ********************************************************************************************* //
@@ -63,8 +63,8 @@ RootsTab.prototype = Lib.extend(TabView.Tab.prototype,
         var results = this.tabView.analyzer.findRoots(selection.address);
         if (results.length)
         {
-            var tree = new ObjectTree(results);
-            tree.append(body, true);
+            var table = new ObjectTableView();
+            table.render(body, results);
         }
         else
         {

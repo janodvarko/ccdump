@@ -11,12 +11,16 @@ function(Domplate, Lib, DomTree, FBTrace) { with (Domplate) {
 
 // ********************************************************************************************* //
 
-var TableView = domplate(
+function TableView()
+{
+}
+
+TableView.prototype = domplate(
 {
     className: "table",
 
     tag:
-        DIV({"class": "dataTableSizer", "tabindex": "-1" },
+        DIV({"class": "dataTableSizer", "tabindex": "-1"},
             TABLE({"class": "dataTable", cellspacing: 0, cellpadding: 0, width: "100%",
                 "role": "grid"},
                 THEAD({"class": "dataTableThead", "role": "presentation"},
@@ -34,18 +38,43 @@ var TableView = domplate(
                 ),
                 TBODY({"class": "dataTableTbody", "role": "presentation"},
                     FOR("row", "$object.data|getRows",
-                        TR({"class": "focusRow dataTableRow subFocusRow", "role": "row",
-                            _repObject: "$row"},
-                            FOR("column", "$row|getColumns",
-                                TD({"class": "a11yFocus dataTableCell", "role": "gridcell"},
-                                    TAG("$column|getValueTag", {object: "$column.value"})
-                                )
-                            )
-                        )
+                        TAG("$row|getRowTag", {row: "$row", columns: "$row|getColumns"})
                     )
                 )
             )
         ),
+
+    rowTag:
+        TR({"class": "focusRow dataTableRow subFocusRow", "role": "row", _repObject: "$row"},
+            FOR("column", "$columns",
+                TD({"class": "a11yFocus dataTableCell", "role": "gridcell"},
+                    TAG("$column|getValueTag", {object: "$column|getValue"})
+                )
+            )
+        ),
+
+    moreTag:
+        TR({"class": "dataTableRow"},
+            TD({"class": "dataTableMore", colspan: "$object.columns.length"},
+                SPAN({"class": "button", onclick: "$onMore"},
+                    "Get Another $limit"
+                ),
+                SPAN({"class": "button", onclick: "$onGetAll",
+                    title: "This can be really slow in case of huge number of entries"},
+                    "Get Remaining ($remaining)"
+                )
+            )
+        ),
+
+    getRowTag: function()
+    {
+        return this.rowTag;
+    },
+
+    getValue: function(column)
+    {
+        return column.value;
+    },
 
     getValueTag: function(colAndValue)
     {
@@ -68,6 +97,10 @@ var TableView = domplate(
         var props = this.getProps(data);
         if (!props.length)
             return [];
+
+        if (props.length > this.limit)
+            this.throttleQueue = props.splice(this.limit, props.length - this.limit);
+
         return props;
     },
 
@@ -238,7 +271,7 @@ var TableView = domplate(
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Public
 
-    render: function(parentNode, data, cols)
+    render: function(parentNode, data, cols, limit)
     {
         // No arguments passed into console.table method, bail out for now,
         // but some error message could be displayed in the future.
@@ -269,24 +302,69 @@ var TableView = domplate(
 
         try
         {
+            // max number of rows rendered at once (no limit if 0)
+            this.limit = limit || 0;
+
+            Lib.eraseNode(parentNode);
+
             this.columns = columns;
             var object = {data: data, columns: columns};
-            var element = this.tag.append({object: object, columns: columns}, parentNode);
+            this.element = this.tag.append({object: object, columns: columns}, parentNode, this);
+            this.element.repObject = this;
 
             // Set vertical height for scroll bar.
-            var tBody = Lib.getElementByClass(element, "dataTableTbody");
+            var tBody = Lib.getElementByClass(this.element, "dataTableTbody");
             var maxHeight = 200; // xxxHonza: a pref?
             if (maxHeight > 0 && tBody.clientHeight > maxHeight)
                 tBody.style.height = maxHeight + "px";
+
+            // Append footer for dynamical fetch of rows (in case of huge number of rows)
+            if (this.throttleQueue && this.throttleQueue.length)
+            {
+                this.moreTag.insertRows({object: object, columns: columns,
+                    limit: this.limit, remaining: this.throttleQueue.length},
+                    tBody, this);
+            }
         }
         catch (err)
         {
             FBTrace.sysout("tableView.render; EXCEPTION " + err, err);
         }
-        finally
+    },
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Dynamic fetching of rows
+
+    onMore: function(event)
+    {
+        var rows = this.throttleQueue;
+        if (!rows || !rows.length)
+            return;
+
+        // Get next chunk of rows.
+        if (this.limit)
+            this.throttleQueue = rows.splice(this.limit, rows.length - this.limit);
+        else
+            this.throttleQueue = null;
+
+        // Append next chunk of rows into the table
+        var tBody = Lib.getElementByClass(this.element, "dataTableTbody");
+        for (var i=0; i<rows.length; i++)
         {
-            delete this.columns;
+            var row = rows[i];
+            var cols = this.element.repObject.getColumns(row);
+            this.rowTag.insertRows({row: row, columns: cols}, tBody.lastChild.previousSibling, this);
         }
+
+        // If there are no other rows in the throttle queue, remove the "more" button
+        if (!this.throttleQueue || !this.throttleQueue.length)
+            tBody.removeChild(tBody.lastChild);
+    },
+
+    onGetAll: function(event)
+    {
+        this.limit = 0;
+        this.onMore(event);
     }
 });
 

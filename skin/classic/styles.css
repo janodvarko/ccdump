@@ -129,3 +129,11 @@ html, body {
 .tabAboutBody code {
     background-color: #F9F9F9;
 }
+
+/*************************************************************************************************/
+/* Object Table View */
+
+.objectBox-indexNumber {
+    text-align: right;
+    padding-right: 5px;
+}

@@ -146,6 +146,15 @@ Search.Box = domplate(
 
         var searchInput = Lib.getElementByClass(element, "searchInput");
         searchInput.setAttribute("disabled", "true");
+    },
+
+    /**
+     * Returns the current search string.
+     */
+    getValue: function(element)
+    {
+        var searchInput = Lib.getElementByClass(element, "searchInput");
+        return searchInput.value;
     }
 });
 
