@@ -7,7 +7,7 @@ define([
     "lib/popupMenu"
 ],
 
-function(Domplate, Lib, Trace, Menu) { with (Domplate) {
+function(Domplate, Lib, FBTrace, Menu) { with (Domplate) {
 
 // ********************************************************************************************* //
 
@@ -214,24 +214,36 @@ Toolbar.prototype =
     {
         var button = this.getButton(buttonId);
         button.element.setAttribute("disabled", "true");
+
+        if (button.disable)
+            button.disable(button.element);
     },
 
     enableButton: function(buttonId)
     {
         var button = this.getButton(buttonId);
         button.element.removeAttribute("disabled");
+
+        if (button.enable)
+            button.enable(button.element);
     },
 
     showButton: function(buttonId)
     {
         var button = this.getButton(buttonId);
         Lib.collapse(button.element, false);
+
+        if (button.show)
+            button.show(button.element);
     },
 
     hideButton: function(buttonId)
     {
         var button = this.getButton(buttonId);
         Lib.collapse(button.element, true);
+
+        if (button.hide)
+            button.hide(button.element);
     }
 };
 

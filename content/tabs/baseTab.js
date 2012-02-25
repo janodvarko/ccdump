@@ -58,7 +58,9 @@ BaseTab.prototype = Lib.extend(TabView.Tab.prototype,
         buttons.push({
             id: "search",
             tag: Search.Box.tag,
-            initialize: Search.Box.initialize
+            initialize: Search.Box.initialize,
+            disable: Search.Box.disable,
+            enable: Search.Box.enable
         });
 
         return buttons;

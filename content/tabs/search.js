@@ -4,8 +4,9 @@ define([
     "lib/domplate",
     "lib/lib",
     "lib/popupMenu",
+    "lib/trace",
 ],
-function(Domplate, Lib, Menu) { with (Domplate) {
+function(Domplate, Lib, Menu, FBTrace) { with (Domplate) {
 
 // ********************************************************************************************* //
 // Search
@@ -86,6 +87,10 @@ Search.Box = domplate(
             return;
 
         var target = e.target;
+        var element = Lib.getAncestorByClass(target, "searchBox");
+        if (element.getAttribute("disabled") == "true")
+            return;
+
         var items = this.getMenuItems(target);
         if (!items)
             return;
@@ -122,6 +127,25 @@ Search.Box = domplate(
         searchInput.value = text;
 
         setTimeout(Lib.bindFixed(this.search, this, tab, 13, text));
+    },
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // State
+
+    enable: function(element)
+    {
+        element.removeAttribute("disabled");
+
+        var searchInput = Lib.getElementByClass(element, "searchInput");
+        searchInput.removeAttribute("disabled");
+    },
+
+    disable: function(element)
+    {
+        element.setAttribute("disabled", "true");
+
+        var searchInput = Lib.getElementByClass(element, "searchInput");
+        searchInput.setAttribute("disabled", "true");
     }
 });
 

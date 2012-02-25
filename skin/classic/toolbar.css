@@ -53,6 +53,7 @@
 .toolbarButton[disabled] {
     background-color: #EEEEEE;
     color: gray;
+    cursor: default;
 }
 
 .toolbarButton[disabled].text:hover {
@@ -89,8 +90,10 @@
 
 .toolbarButton[disabled].dropDown .dropMarker.menuButton:hover {
     box-shadow: none;
+    cursor: default;
 }
 
 .toolbarButton[disabled].dropDown .arrow {
     background: url(images/contextMenuTargetDisabled.png) no-repeat;
+    cursor: default;
 }

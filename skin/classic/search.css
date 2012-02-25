@@ -43,3 +43,13 @@
 .searchBox .resizer {
     cursor: e-resize;
 }
+
+.searchBox[disabled] {
+    color: white;
+    cursor: default;
+}
+
+.searchBox[disabled] .arrow {
+    background-image: url(images/contextMenuTargetDisabled.png);
+    cursor: default;
+}

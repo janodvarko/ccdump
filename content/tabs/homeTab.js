@@ -41,9 +41,6 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
     {
         BaseTab.prototype.onUpdateBody.apply(this, arguments);
 
-        var content = this.getTabContent();
-        this.defaultContentTag.replace({}, content);
-
         // Set UI into the default state.
         this.resetUI();
     },
@@ -156,6 +153,11 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         this.toolbar.enableButton("run");
         this.toolbar.hideButton("save");
         this.toolbar.disableButton("cleanUp");
+        this.toolbar.disableButton("search");
+
+        // Display the default content
+        var content = this.getTabContent();
+        this.defaultContentTag.replace({}, content);
     },
 
     enableUI: function()
@@ -163,6 +165,7 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         this.toolbar.enableButton("run");
         this.toolbar.showButton("save");
         this.toolbar.enableButton("cleanUp");
+        this.toolbar.enableButton("search");
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -202,6 +205,11 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
 
     onSearch: function(text, keyCode)
     {
+        if (this.tabView.analyzer.isEmpty())
+        {
+            return;
+        }
+
         var parentNode = this.getTabContent();
         Lib.eraseNode(parentNode);
 
