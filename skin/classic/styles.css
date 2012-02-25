@@ -42,12 +42,6 @@ html, body {
     padding-bottom: 3px;
 }
 
-.tabHomeBody .saveButton {
-    width: 16px;
-    height: 16px;
-    background-image: url(images/save.png)
-}
-
 .tabHomeBody .progressLabel {
     white-space: nowrap;
     color: gray;
@@ -55,10 +49,11 @@ html, body {
 }
 
 .tabHomeBody .save {
+    width: 16px;
+    height: 16px;
     padding: 8px;
     background-image: url(images/save.png);
     background-repeat: no-repeat;
-    background-position: 0 7px;
     cursor: pointer;
 }
 

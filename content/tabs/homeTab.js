@@ -41,12 +41,11 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
     {
         BaseTab.prototype.onUpdateBody.apply(this, arguments);
 
-        // hide save log button.
-        var save = this.toolbar.element.querySelector(".saveButton");
-        Lib.collapse(save, true);
-
         var content = this.getTabContent();
         this.defaultContentTag.replace({}, content);
+
+        // Set UI into the default state.
+        this.resetUI();
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -58,19 +57,19 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
 
         var buttons = [];
 
-        /*buttons.push({
+        buttons.push({
             id: "cleanUp",
             label: "Clean Up",
             tooltiptext: "Trash all collected data",
             className: "cleanUp",
             command: this.onCleanUp.bind(this)
-        });*/
+        });
 
         buttons.push({
             id: "run",
             label: "Run CC Analysys",
             tooltiptext: "Run Cycle Collector Analysys",
-            className: "runCC",
+            className: "run",
             command: this.onRun.bind(this),
             getItems: this.getRunOptions.bind(this)
         });
@@ -83,7 +82,7 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         buttons.push({
             id: "save",
             tooltiptext: "Save the log into a file",
-            className: "saveButton",
+            className: "save",
             command: this.onSave.bind(this)
         });
 
@@ -104,28 +103,10 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
 
     onRun: function(event)
     {
-        var parentNode = this.getTabContent();
-        Lib.eraseNode(parentNode);
+        this.resetUI();
 
-        // Make sure the other tabs doesn't contain any references to the current graph.
-        // It would dramatically increase number of objects in the next CC graph.
-        for each (var tab in this.tabView.tabs)
-        {
-            if (tab != this)
-                tab.invalidate();
-        }
-
-        this.tabView.selection = null;
-
-        // hide save log button.
-        var save = this.toolbar.element.querySelector(".saveButton");
-        Lib.collapse(save, true);
-
-        // Disable the Run button
-        var runCC = this.toolbar.element.querySelector(".runCC");
-        runCC.setAttribute("disabled", "true");
-
-        // Run CC collctor.
+        // Run CC collector. Disable the run button to avoid clicks during processing.
+        this.toolbar.disableButton("run");
         this.tabView.analyzer.run(this);
 
         // Reset the progress info.
@@ -140,7 +121,48 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
 
     onCleanUp: function()
     {
-        
+        document.location.reload();
+    },
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // UI Update
+
+    /**
+     * This method should reset the UI and get rid of all references that could keep
+     * the result graph in the memory.
+     */
+    resetUI: function()
+    {
+        this.tabView.analyzer.clear();
+
+        // Update progress label.
+        this.onProgress(this.tabView.analyzer);
+
+        var parentNode = this.getTabContent();
+        Lib.eraseNode(parentNode);
+
+        // Make sure the other tabs doesn't contain any references to the current graph.
+        // It would dramatically increase number of objects in the next CC graph.
+        for each (var tab in this.tabView.tabs)
+        {
+            if (tab != this)
+                tab.invalidate();
+        }
+
+        //xxxHonza: close dynamically appended tabs?
+
+        this.tabView.selection = null;
+
+        this.toolbar.enableButton("run");
+        this.toolbar.hideButton("save");
+        this.toolbar.disableButton("cleanUp");
+    },
+
+    enableUI: function()
+    {
+        this.toolbar.enableButton("run");
+        this.toolbar.showButton("save");
+        this.toolbar.enableButton("cleanUp");
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -149,27 +171,20 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
     onProgress: function(analyzer)
     {
         var label = this.toolbar.element.querySelector(".progressLabel");
-        label.innerHTML = "Collected: " + Object.keys(analyzer.graph).length + " objects, " +
+        var text = "Collected: " + Object.keys(analyzer.graph).length + " objects, " +
             analyzer.roots.length + " roots, " +
             analyzer.garbage.length + " garbage, " +
             analyzer.edges.length + " edges";
+
+        label.innerHTML = analyzer.isEmpty() ? "" : text;
     },
 
     onFinished: function(analyzer)
     {
-        // Update progress label.
+        // Update UI and render the restult graph
         this.onProgress(analyzer);
-
-        // Create output tree
+        this.enableUI();
         this.renderGraph();
-
-        // Enable the run button.
-        var runCC = this.toolbar.element.querySelector(".runCC");
-        runCC.removeAttribute("disabled");
-
-        // Show save log button.
-        var save = this.toolbar.element.querySelector(".saveButton");
-        Lib.collapse(save, false);
 
         // Search for zombie documents by default
         this.doSearch("nsDocument");

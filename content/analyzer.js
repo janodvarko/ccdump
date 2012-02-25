@@ -19,14 +19,13 @@ var searchGeneration = 0;
 
 function Analyzer()
 {
-    this.graph = null;
 }
 
 Analyzer.prototype =
 {
     isEmpty: function()
     {
-        return this.graph == null;
+        return !this.listener;
     },
 
     getSearchId: function()
@@ -39,15 +38,22 @@ Analyzer.prototype =
         return this.graph[addr];
     },
 
-    run: function(callback)
+    clear: function()
     {
-        this.callback = callback;
-
+        this.callback = null;
         this.processingCount = 0;
         this.graph = {};
         this.roots = [];
         this.garbage = [];
         this.edges = [];
+        this.listener = null;
+    },
+
+    run: function(callback)
+    {
+        this.clear();
+
+        this.callback = callback;
 
         this.listener = Cc["@mozilla.org/cycle-collector-logger;1"].
             createInstance(Ci.nsICycleCollectorListener);
@@ -90,7 +96,6 @@ Analyzer.prototype =
             if (!this.listener.processNext(this))
             {
                 this.callback.onFinished.call(this.callback, this);
-                //setTimeout(allObjects, 1000);
                 return;
             }
         }

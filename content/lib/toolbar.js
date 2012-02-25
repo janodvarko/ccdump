@@ -75,8 +75,10 @@ var ToolbarTempl = domplate(
 
         var target = e.target;
         var element = Lib.getAncestorByClass(target, "toolbarButton");
-        var button = element.repObject;
+        if (element.getAttribute("disabled") == "true")
+            return;
 
+        var button = element.repObject;
         if (button.command)
         {
             button.command();
@@ -94,16 +96,27 @@ var ToolbarTempl = domplate(
 
         var target = e.target;
         var element = Lib.getAncestorByClass(target, "toolbarButton");
-        var button = element.repObject;
+        if (element.getAttribute("disabled") == "true")
+            return;
 
+        // If there is no associted command let's process the event in onCommmand,
+        // which is trying to display a drop down menu.
+        var button = element.repObject;
         if (!(button.getItems && button.command))
             return;
 
         Lib.cancelEvent(e);
 
+        // Display drop down now, the onCommand would execute the command.
         var dropMarker = Lib.getAncestorByClass(target, "dropMarker");
         var menu = new Menu({id: "toolbarContextMenu", items: button.getItems()});
         menu.showPopup(dropMarker);
+    },
+
+    getButton: function(target)
+    {
+        var element = Lib.getAncestorByClass(target, "toolbarButton");
+        return element.repObject;
     }
 });
 
@@ -173,6 +186,7 @@ Toolbar.prototype =
             var tag = button.tag ? button.tag : defaultTag;
 
             var element = tag.append({button: button}, this.element);
+            button.element = element;
 
             // If its dropdown with associated command the arrow is working
             // as an independent drop marker. Otherwise, clicking anywhere in
@@ -191,6 +205,33 @@ Toolbar.prototype =
         }
 
         return this.element;
+    },
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Button State
+
+    disableButton: function(buttonId)
+    {
+        var button = this.getButton(buttonId);
+        button.element.setAttribute("disabled", "true");
+    },
+
+    enableButton: function(buttonId)
+    {
+        var button = this.getButton(buttonId);
+        button.element.removeAttribute("disabled");
+    },
+
+    showButton: function(buttonId)
+    {
+        var button = this.getButton(buttonId);
+        Lib.collapse(button.element, false);
+    },
+
+    hideButton: function(buttonId)
+    {
+        var button = this.getButton(buttonId);
+        Lib.collapse(button.element, true);
     }
 };
 

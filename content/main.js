@@ -15,9 +15,8 @@ require(config, [
     "analyzer",
     "tabNavigator",
     "lib/options",
-    "tabs/graphTab"
 ],
-function(TabView, Lib, FBTrace, HomeTab, AboutTab, Analyzer, TabNavigator, Options, GraphTab) {
+function(TabView, Lib, FBTrace, HomeTab, AboutTab, Analyzer, TabNavigator, Options) {
 with (Domplate) {
 
 // ********************************************************************************************* //
@@ -31,7 +30,6 @@ function MainView()
 
     // Append tabs
     this.appendTab(new HomeTab());
-    this.appendTab(new GraphTab());
     this.appendTab(new AboutTab());
 }
 

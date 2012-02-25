@@ -122,7 +122,7 @@ var TableView = domplate(
         return arr;
     },
 
-    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Sorting
 
     onClickHeader: function(event)
@@ -235,7 +235,7 @@ var TableView = domplate(
         return true;
     },
 
-    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Public
 
     render: function(parentNode, data, cols)
