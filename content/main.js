@@ -12,8 +12,8 @@ require(config, [
     "lib/trace",
     "tabs/homeTab",
     "tabs/aboutTab",
-    "analyzer",
-    "tabNavigator",
+    "app/analyzer",
+    "app/tabNavigator",
     "lib/options",
 ],
 function(TabView, Lib, FBTrace, HomeTab, AboutTab, Analyzer, TabNavigator, Options) {

@@ -5,8 +5,8 @@
 define([
     "lib/lib",
     "lib/trace",
-    "analyzer",
-    "objectGraphGenerator",
+    "app/analyzer",
+    "app/objectGraphGenerator",
     "tabs/graphTab",
     "tabs/detailsTab",
     "tabs/rootsTab",

@@ -3,11 +3,11 @@
 define([
     "lib/domplate",
     "lib/domTree",
-    "analyzer",
+    "app/analyzer",
     "lib/trace",
-    "objectLink",
-    "objectMenu",
-    "objectGraphGenerator"
+    "app/objectLink",
+    "app/objectMenu",
+    "app/objectGraphGenerator"
 ],
 function(Domplate, DomTree, Analyzer, FBTrace, ObjectLink, ObjectMenu, ObjectGraphGenerator) {
 

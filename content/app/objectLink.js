@@ -15,7 +15,9 @@ var ObjectLink = domplate(DomTree.Rep,
     className: "ccLink",
 
     tag:
-        OBJECTLINK({href: "$object|getTargetUrl", onclick: "$onClick"}, "$object|getTitle"),
+        OBJECTLINK({href: "$object|getTargetUrl", onclick: "$onClick"},
+            "$object|getTitle"
+        ),
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Event Handlers

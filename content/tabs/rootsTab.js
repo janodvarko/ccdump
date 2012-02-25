@@ -5,7 +5,7 @@ define([
     "lib/lib",
     "lib/trace",
     "lib/tabView",
-    "objectTableView",
+    "app/objectTableView",
 ],
 
 function(Domplate, Lib, FBTrace, TabView, ObjectTableView) {

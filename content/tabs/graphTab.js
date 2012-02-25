@@ -6,9 +6,9 @@ define([
     "lib/trace",
     "tabs/BaseTab",
     "lib/options",
-    "objectTree",
-    "objectGraphGenerator",
-    "objectTableView"
+    "app/objectTree",
+    "app/objectGraphGenerator",
+    "app/objectTableView"
 ],
 
 function(Domplate, Lib, FBTrace, BaseTab, Options, ObjectTree, ObjectGraphGenerator,

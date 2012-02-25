@@ -5,8 +5,8 @@ define([
     "lib/lib",
     "lib/trace",
     "lib/tabView",
-    "objectTree",
-    "objectGraphGenerator"
+    "app/objectTree",
+    "app/objectGraphGenerator"
 ],
 
 function(Domplate, Lib, FBTrace, TabView, ObjectTree, ObjectGraphGenerator) {

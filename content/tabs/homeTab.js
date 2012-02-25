@@ -5,14 +5,14 @@ define([
     "lib/lib",
     "tabs/baseTab",
     "lib/trace",
-    "objectTree",
+    "app/objectTree",
     "tabs/search",
-    "serializer",
+    "app/graphSerializer",
     "lib/options",
-    "objectTableView",
-    "objectFinder"
+    "app/objectTableView",
+    "app/objectFinder"
 ],
-function(Domplate, Lib, BaseTab, FBTrace, ObjectTree, Search, Serializer, Options,
+function(Domplate, Lib, BaseTab, FBTrace, ObjectTree, Search, GraphSerializer, Options,
     ObjectTableView, ObjectFinder) {
 
 with (Domplate) {
@@ -122,8 +122,8 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
 
     onSave: function()
     {
-        var text = Serializer.serializeGraph(this.tabView.analyzer.graph);
-        Serializer.saveToFile(text);
+        var text = GraphSerializer.serializeGraph(this.tabView.analyzer.graph);
+        GraphSerializer.saveToFile(text);
     },
 
     onCleanUp: function()

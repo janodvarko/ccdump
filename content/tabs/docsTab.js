@@ -5,7 +5,7 @@ define([
     "lib/lib",
     "lib/trace",
     "lib/tabView",
-    "objectTree",
+    "app/objectTree",
 ],
 
 function(Domplate, Lib, FBTrace, TabView, ObjectTree) { with (Domplate) {
