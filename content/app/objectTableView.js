@@ -51,7 +51,7 @@ ObjectTableView.prototype = domplate(TableView.prototype,
     render: function(parentNode, data, cols, limit)
     {
         cols = cols || [
-            {property: "index", label: " "},
+            {property: "index", label: "index", alphaValue: false},
             {property: "name", rep: ObjectMenu},
             {property: "address", rep: ObjectLink},
             {property: "refcount", alphaValue: false},

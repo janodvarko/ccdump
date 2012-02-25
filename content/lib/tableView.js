@@ -54,7 +54,7 @@ TableView.prototype = domplate(
         ),
 
     moreTag:
-        TR({"class": "dataTableRow"},
+        TR({"class": "dataTableFooterRow"},
             TD({"class": "dataTableMore", colspan: "$object.columns.length"},
                 SPAN({"class": "button", onclick: "$onMore"},
                     "Get Another $limit"
@@ -179,9 +179,16 @@ TableView.prototype = domplate(
         var tbody = Lib.getChildByClass(table, "dataTableTbody");
         var thead = Lib.getChildByClass(table, "dataTableThead");
 
+        var footer;
         var values = [];
         for (var row = tbody.childNodes[0]; row; row = row.nextSibling)
         {
+            if (Lib.hasClass(row, "dataTableFooterRow"))
+            {
+                footer = row;
+                continue;
+            }
+
             var cell = row.childNodes[colIndex];
             var value = numerical ? parseFloat(cell.textContent) : cell.textContent;
             values.push({row: row, value: value});
@@ -220,6 +227,8 @@ TableView.prototype = domplate(
             for (var i = values.length-1; i >= 0; --i)
                 tbody.appendChild(values[i].row);
         }
+
+        tbody.appendChild(footer);
     },
 
     /**
