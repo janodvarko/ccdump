@@ -212,33 +212,6 @@ Analyzer.prototype =
             this.getChildObjects(edge.to, res, searchGen);
     },
 
-    findObjects: function(name, caseSensitive)
-    {
-        if (!name)
-            return null;
-
-        if (!caseSensitive)
-            name = name.toLowerCase();
-
-        var result = [];
-        for each (var o in this.graph)
-        {
-            var oName = o.name;
-            var oAddress = o.address;
-
-            if (!caseSensitive)
-            {
-                oName = oName.toLowerCase();
-                oAddress = oAddress.toLowerCase();
-            }
-
-            if (oName.indexOf(name) >= 0 || oAddress.indexOf(name) >= 0)
-                result.push(o);
-        }
-
-        return result.length ? result : null;
-    },
-
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     findRoots: function(addr)

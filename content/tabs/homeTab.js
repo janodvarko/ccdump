@@ -10,10 +10,10 @@ define([
     "serializer",
     "lib/options",
     "objectTableView",
-    "tabs/graphTab"
+    "objectFinder"
 ],
 function(Domplate, Lib, BaseTab, FBTrace, ObjectTree, Search, Serializer, Options,
-    ObjectTableView) {
+    ObjectTableView, ObjectFinder) {
 
 with (Domplate) {
 
@@ -214,7 +214,10 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         Lib.eraseNode(parentNode);
 
         var caseSensitive = Options.getPref("search.caseSensitive");
-        var result = this.tabView.analyzer.findObjects(text, caseSensitive);
+        var useRegExp = Options.getPref("search.useRegExp");
+
+        var finder = new ObjectFinder(this.tabView.analyzer.graph);
+        var result = finder.findObjects(text, caseSensitive, useRegExp);
         if (!result)
         {
             this.renderGraph();

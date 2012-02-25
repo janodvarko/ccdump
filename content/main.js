@@ -50,6 +50,7 @@ MainView.prototype = Lib.extend(new TabView(),
         // The default pref domain is: "extensions.ccdump."
         Options.initPref("search.tableLayout", true);
         Options.initPref("search.caseSensitive", false);
+        Options.initPref("search.useRegExp", false);
         Options.initPref("traceAll", false);
 
         // Shutdown listener

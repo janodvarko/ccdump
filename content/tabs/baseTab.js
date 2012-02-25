@@ -89,6 +89,12 @@ BaseTab.prototype = Lib.extend(TabView.Tab.prototype,
             command: Lib.bindFixed(this.onOption, this, "search.caseSensitive")
         });
         items.push({
+            label: "Use Regular Expressions",
+            checked: Options.getPref("search.useRegExp"),
+            command: Lib.bindFixed(this.onOption, this, "search.useRegExp")
+        });
+        items.push("-");
+        items.push({
             label: "Table Layout",
             checked: Options.getPref("search.tableLayout"),
             command: Lib.bindFixed(this.onOption, this, "search.tableLayout")
