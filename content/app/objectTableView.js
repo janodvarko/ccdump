@@ -3,7 +3,7 @@
 define([
     "lib/domplate",
     "lib/trace",
-    "lib/TableView",
+    "lib/tableView",
     "app/objectMenu",
     "app/objectLink",
     "lib/domTree",

@@ -4,7 +4,7 @@ define([
     "lib/domplate",
     "lib/lib",
     "lib/trace",
-    "tabs/BaseTab",
+    "tabs/baseTab",
     "lib/options",
     "app/objectTree",
     "app/objectGraphGenerator",
