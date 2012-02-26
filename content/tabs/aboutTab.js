@@ -53,7 +53,8 @@ AboutTab.prototype = Lib.extend(TabView.Tab.prototype,
             createInstance(Ci.nsIScriptableInputStream);
         sis.init(input);
 
-        body.innerHTML = sis.readBytes(input.available());
+        var html = sis.readBytes(input.available());
+        body.innerHTML = html.replace("@VERSION@", tabView.version, "g");
 
         sis.close();
     },
