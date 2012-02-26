@@ -95,6 +95,11 @@ html, body {
     top: 3px;
 }
 
+.AboutTab .version {
+    font-size: 11px;
+    color: #DD467B;
+}
+
 .tabAboutBody {
     margin: 15px;
     font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;

@@ -31,6 +31,15 @@ AboutTab.prototype = Lib.extend(TabView.Tab.prototype,
     bodyTag:
         DIV({"class": "aboutBody"}),
 
+    tabHeaderTag:
+        A({"class": "$tab.id\\Tab tab", view: "$tab.id", _repObject: "$tab"},
+            "$tab.label",
+            SPAN("&nbsp;"),
+            SPAN({"class": "version"},
+                "$tab.tabView.version"
+            )
+        ),
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Content
 

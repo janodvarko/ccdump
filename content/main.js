@@ -20,6 +20,14 @@ function(TabView, Lib, FBTrace, HomeTab, AboutTab, Analyzer, TabNavigator, Optio
 with (Domplate) {
 
 // ********************************************************************************************* //
+// Constants
+
+const Cc = Components.classes;
+const Ci = Components.interfaces;
+
+var versionURL = "resource://ccdump/app.properties";
+
+// ********************************************************************************************* //
 // Main Application Object
 
 function MainView()
@@ -39,6 +47,8 @@ MainView.prototype = Lib.extend(new TabView(),
     {
         this.content = document.getElementById("content");
         this.content.repObject = this;
+
+        this.version = this.loadVersion();
 
         this.render(this.content);
         this.selectTabByName("Home");
@@ -64,6 +74,30 @@ MainView.prototype = Lib.extend(new TabView(),
         window.removeEventListener("unload", this.shutdownListener, false);
 
         TabNavigator.shutdown();
+    },
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Version
+
+    loadVersion: function()
+    {
+        FBTrace.sysout("versionURL " + versionURL)
+        var ioService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
+        var channel = ioService.newChannel(versionURL, null, null);
+        var input = channel.open();
+
+        var sis = Cc["@mozilla.org/scriptableinputstream;1"].
+            createInstance(Ci.nsIScriptableInputStream);
+        sis.init(input);
+
+        var content = sis.readBytes(input.available());
+
+        var version;
+        var m = /VERSION=(.*)/.exec(content);
+        if (m)
+            version = m[1];
+
+        return version;
     },
 });
 
