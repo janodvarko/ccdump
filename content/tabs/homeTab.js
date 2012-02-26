@@ -83,11 +83,20 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
 
     getRunOptions: function()
     {
-        return [{
+        var items = [];
+        items.push({
             label: "Trace All",
             checked: Options.getPref("traceAll"),
             command: this.onOption.bind(this, "traceAll")
-        }];
+        });
+
+        items.push("-");
+        items.push({
+            label: "Load From File",
+            command: this.onLoad.bind(this)
+        });
+
+        return items;
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -122,8 +131,20 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
 
     onSave: function()
     {
-        var text = GraphSerializer.serializeGraph(this.tabView.analyzer.graph);
-        GraphSerializer.saveToFile(text);
+        var self = this;
+        GraphSerializer.saveToFile(function()
+        {
+            return GraphSerializer.toJSON(self.tabView.analyzer);
+        });
+        
+    },
+
+    onLoad: function()
+    {
+        this.resetUI();
+
+        GraphSerializer.loadFromFile(this.tabView.analyzer);
+        this.onFinished(this.tabView.analyzer);
     },
 
     onCleanUp: function()

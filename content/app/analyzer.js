@@ -1,10 +1,11 @@
 /* See license.txt for terms of usage */
 
 define([
+    "lib/lib",
     "lib/trace",
     "lib/options"
 ],
-function(FBTrace, Options) {
+function(Lib, FBTrace, Options) {
 
 // ********************************************************************************************* //
 // Constants
@@ -25,7 +26,7 @@ Analyzer.prototype =
 {
     isEmpty: function()
     {
-        return !this.listener;
+        return !Lib.hasProperties(this.graph);
     },
 
     getSearchId: function()
@@ -285,6 +286,21 @@ Analyzer.CCObject = function()
 
 Analyzer.CCObject.prototype =
 {
+    clone: function()
+    {
+        var o = new Analyzer.CCObject();
+        o.name = this.name;
+        o.address = this.address;
+        o.refcount = this.refcount;
+        o.gcmarked = this.gcmarked;
+        o.root = this.root;
+        o.garbage = this.garbage;
+        o.knownEdges = this.knownEdges;
+        o.edges = Lib.cloneArray(this.edges);
+        o.owners = Lib.cloneArray(this.owners);
+        o.searchMark = 0;
+        return o;
+    }
 }
 
 // ********************************************************************************************* //
