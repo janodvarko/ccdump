@@ -83,6 +83,7 @@ BaseTab.prototype = Lib.extend(TabView.Tab.prototype,
             label: "Clear Search Results",
             command: Lib.bindFixed(this.doSearch, this, "")
         });
+        items.push("-");
         items.push({
             label: "Case Sensitive",
             checked: Options.getPref("search.caseSensitive"),
@@ -94,11 +95,11 @@ BaseTab.prototype = Lib.extend(TabView.Tab.prototype,
             command: Lib.bindFixed(this.onOption, this, "search.useRegExp")
         });
         items.push("-");
-        items.push({
+        /*items.push({
             label: "Table Layout",
             checked: Options.getPref("search.tableLayout"),
             command: Lib.bindFixed(this.onOption, this, "search.tableLayout")
-        });
+        });*/
 
         return items;
     },

@@ -81,7 +81,7 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         buttons.push({
             id: "showRoots",
             label: "Show Roots",
-            tooltiptext: "Show all root objects",
+            tooltiptext: "Show all root objects in the graph",
             className: "showRoots",
             command: this.onShowRoots.bind(this)
         });

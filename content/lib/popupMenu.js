@@ -315,7 +315,7 @@ Menu.prototype = Lib.extend(Controller,
 
         var size = Lib.getWindowSize();
 
-        x = Math.min(x, size.width - this.element.clientWidth - 10);
+        x = Math.min(x, size.width - this.element.clientWidth - 30);
         x = Math.max(x, 0);
 
         y = Math.min(y, size.height - this.element.clientHeight - 10);
