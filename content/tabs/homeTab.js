@@ -59,8 +59,8 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
 
         buttons.push({
             id: "run",
-            label: "Run CC Analysys",
-            tooltiptext: "Run Cycle Collector Analysys",
+            label: "Run CC Analysis",
+            tooltiptext: "Run Cycle Collector Analysis",
             className: "run",
             command: this.onRun.bind(this),
             getItems: this.getRunOptions.bind(this)
