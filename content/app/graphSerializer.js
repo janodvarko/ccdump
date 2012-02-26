@@ -76,7 +76,6 @@ var GraphSerializer =
                 createInstance(Ci.nsIScriptableInputStream);
             sis.init(inputStream);
 
-            FBTrace.sysout("length " + inputStream.available())
             var jsonString = sis.readBytes(inputStream.available());
             return this.parseFromJSON(jsonString, analyzer);
         }
@@ -184,7 +183,6 @@ var GraphSerializer =
         analyzer.clear();
 
         var log = JSON.parse(jsonString);
-        FBTrace.sysout("log", log);
         for each (var o in log.graph)
         {
             var obj = analyzer.ensureObject(o.address);

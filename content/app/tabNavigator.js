@@ -71,7 +71,6 @@ var TabNavigator =
         tab.currGraphType = type;
 
         this.tabView.selection = selection;
-
         tab.select();
     },
 

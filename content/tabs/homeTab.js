@@ -78,6 +78,14 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
             command: this.onSave.bind(this)
         });
 
+        buttons.push({
+            id: "showRoots",
+            label: "Show Roots",
+            tooltiptext: "Show all root objects",
+            className: "showRoots",
+            command: this.onShowRoots.bind(this)
+        });
+
         return buttons.concat(BaseTab.prototype.getToolbarButtons.apply(this, arguments));
     },
 
@@ -152,6 +160,14 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         document.location.reload();
     },
 
+    onShowRoots: function()
+    {
+        Lib.fireEvent(this.getTabContent(), "navigate", {
+            type: "Roots",
+            selection: {value: this.tabView.analyzer.roots}
+        });
+    },
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // UI Update
 
@@ -185,6 +201,7 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         this.toolbar.hideButton("save");
         this.toolbar.disableButton("cleanUp");
         this.toolbar.disableButton("search");
+        this.toolbar.hideButton("showRoots");
     },
 
     enableUI: function()
@@ -193,6 +210,7 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         this.toolbar.showButton("save");
         this.toolbar.enableButton("cleanUp");
         this.toolbar.enableButton("search");
+        this.toolbar.showButton("showRoots");
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

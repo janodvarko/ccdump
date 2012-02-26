@@ -60,7 +60,8 @@ RootsTab.prototype = Lib.extend(TabView.Tab.prototype,
             return;
         }
 
-        var results = this.tabView.analyzer.findRoots(selection.address);
+        var analyzer = this.tabView.analyzer;
+        var results = selection.address ? analyzer.findRoots(selection.address) : selection;
         if (results.length)
         {
             var table = new ObjectTableView();
