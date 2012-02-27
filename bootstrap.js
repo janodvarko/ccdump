@@ -25,11 +25,7 @@ function startup(aData, aReason)
     var resource = Services.io.getProtocolHandler("resource").
         QueryInterface(Ci.nsIResProtocolHandler);
 
-    var alias = Services.io.newFileURI(aData.installPath);
-    if (!aData.installPath.isDirectory())
-        alias = Services.io.newURI("jar:" + alias.spec + "!/", null, null);
-
-    resource.setSubstitution("ccdump", alias);
+    resource.setSubstitution("ccdump", aData.resourceURI);
     Cm.registerFactory(AboutCC.prototype.classID,
         AboutCC.prototype.classDescription,
         AboutCC.prototype.contractID,
