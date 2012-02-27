@@ -234,7 +234,7 @@ function safeToString(ob)
 var OBJECTBOX =
     DIV({"class": "objectBox objectBox-$className"});
 
-var OBJECTLINK = this.OBJECTLINK =
+var OBJECTLINK =
     A({
         "class": "objectLink objectLink-$className",
         _repObject: "$object"

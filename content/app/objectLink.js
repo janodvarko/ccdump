@@ -10,14 +10,9 @@ function(Domplate, Lib, DomTree, FBTrace) { with (Domplate) {
 
 // ********************************************************************************************* //
 
-var ObjectLink = domplate(DomTree.Rep,
+var ObjectLink = domplate(DomTree.Reps.Link,
 {
     className: "ccLink",
-
-    tag:
-        OBJECTLINK({href: "$object|getTargetUrl", onclick: "$onClick"},
-            "$object|getTitle"
-        ),
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Event Handlers
@@ -31,11 +26,6 @@ var ObjectLink = domplate(DomTree.Rep,
             type: "Details",
             selection: this.getRepObject(event.target)
         });
-    },
-
-    getTargetUrl: function(object)
-    {
-        return object + "";
     },
 });
 
