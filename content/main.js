@@ -81,7 +81,6 @@ MainView.prototype = Lib.extend(new TabView(),
 
     loadVersion: function()
     {
-        FBTrace.sysout("versionURL " + versionURL)
         var ioService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
         var channel = ioService.newChannel(versionURL, null, null);
         var input = channel.open();
