@@ -67,14 +67,17 @@ AboutCC.prototype =
 
     newChannel: function(uri)
     {
+        // The module loader is synchronous so, make sure that the <div id="content">
+        // is defined before main.js is included. This element represents the entire
+        // application UI
         var ioService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
-        var html = 'data:text/html,<!DOCTYPE html><html><head>\n' 
+        var html = 'data:text/html,<!DOCTYPE html><html><head>\n'
             + '<link href="' + MY_URL + 'skin/classic/main.css" rel="stylesheet" type="text/css">\n'
-            + '<script src="' + MY_URL + 'content/require.js" type="application/javascript;version=1.8"></script>\n'
+            + '<script src="' + MY_URL + 'content/loader.js" type="application/javascript;version=1.8"></script>\n'
+            + '</head><body>\n'
+            + "<div id='content'></div>\n"
             + '<script src="' + MY_URL + 'content/main.js" type="application/javascript;version=1.8"></script>\n'
-            + '</head><body>\n';
-        html += "<div id='content'></div>\n";
-        html += "</body></html>\n";
+            + "</body></html>\n";
 
         var securityManager = Cc["@mozilla.org/scriptsecuritymanager;1"].
             getService(Ci.nsIScriptSecurityManager);
