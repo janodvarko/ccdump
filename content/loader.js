@@ -43,7 +43,7 @@ var Loader =
 
         try
         {
-            var module = this.currentModule.pop();
+            var module = this.currentModule[this.currentModule.length-1];
             module.exports = callback.apply(module.scope, args);
         }
         catch (err)
@@ -72,6 +72,10 @@ var Loader =
         catch (err)
         {
             Cu.reportError(err);
+        }
+        finally
+        {
+            this.currentModule.pop();
         }
 
         // Exports (the module return value in case of AMD) is set in define function.
