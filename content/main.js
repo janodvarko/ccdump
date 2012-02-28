@@ -5,7 +5,11 @@
 var config = {};
 config.baseUrl = "resource://ccdump/content";
 
-// Application entry point.
+/**
+ * This is the application entry point. The content/loader.js is responsible for implementing
+ * require() method and also responsible for injecting define() into each module scope.
+ * Every module is using its own scope object but running in shared sandbox.
+ */
 require(config, [
     "lib/tabView",
     "lib/lib",
