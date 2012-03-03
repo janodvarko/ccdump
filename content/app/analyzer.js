@@ -8,12 +8,6 @@ define([
 function(Lib, FBTrace, Options) {
 
 // ********************************************************************************************* //
-// Constants
-
-const Cc = Components.classes;
-const Ci = Components.interfaces;
-
-// ********************************************************************************************* //
 // Cycle Collector Analyzer (listener)
 
 var searchGeneration = 0;
@@ -56,8 +50,8 @@ Analyzer.prototype =
 
         this.callback = callback;
 
-        this.listener = Cc["@mozilla.org/cycle-collector-logger;1"].
-            createInstance(Ci.nsICycleCollectorListener);
+        this.listener = Components.classes["@mozilla.org/cycle-collector-logger;1"].
+            createInstance(Components.interfaces.nsICycleCollectorListener);
 
         // Get much bigger graph (including objects that are usually optimized out)
         // if the preference says so.
@@ -73,6 +67,9 @@ Analyzer.prototype =
 
     runCC: function(counter)
     {
+        var Cc = Components.classes;
+        var Ci = Components.interfaces;
+
         if (--counter >= 0)
         {
             window.QueryInterface(Ci.nsIInterfaceRequestor).

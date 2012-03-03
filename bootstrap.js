@@ -75,6 +75,11 @@ AboutCC.prototype =
             + '<link href="' + MY_URL + 'skin/classic/main.css" rel="stylesheet" type="text/css">\n'
             + '<script src="' + MY_URL + 'content/loader.js" type="application/javascript;version=1.8"></script>\n'
             + '</head><body>\n'
+            + '<script type="application/javascript">'
+            + 'var config = {'
+            + '    baseUrl: "resource://ccdump/content";'
+            + '}'
+            + '</script>'
             + "<div id='content'></div>\n"
             + '<script src="' + MY_URL + 'content/main.js" type="application/javascript;version=1.8"></script>\n'
             + "</body></html>\n";

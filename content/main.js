@@ -2,8 +2,8 @@
 
 // ********************************************************************************************* //
 
-var config = {};
-config.baseUrl = "resource://ccdump/content";
+if (typeof(config) == "undefined")
+    config = {};
 
 /**
  * This is the application entry point. The content/loader.js is responsible for implementing
@@ -25,9 +25,6 @@ with (Domplate) {
 
 // ********************************************************************************************* //
 // Constants
-
-const Cc = Components.classes;
-const Ci = Components.interfaces;
 
 var versionURL = "resource://ccdump/app.properties";
 
@@ -85,6 +82,9 @@ MainView.prototype = Lib.extend(new TabView(),
 
     loadVersion: function()
     {
+        var Cc = Components.classes;
+        var Ci = Components.interfaces;
+
         var ioService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
         var channel = ioService.newChannel(versionURL, null, null);
         var input = channel.open();

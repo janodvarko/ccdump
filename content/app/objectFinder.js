@@ -7,12 +7,6 @@ define([
 function(FBTrace, Options) {
 
 // ********************************************************************************************* //
-// Constants
-
-const Cc = Components.classes;
-const Ci = Components.interfaces;
-
-// ********************************************************************************************* //
 // Cycle Collector Analyzer (listener)
 
 function ObjectFinder(graph)
