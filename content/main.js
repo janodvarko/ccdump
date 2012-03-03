@@ -2,9 +2,6 @@
 
 // ********************************************************************************************* //
 
-if (typeof(config) == "undefined")
-    config = {};
-
 /**
  * This is the application entry point. The content/loader.js is responsible for implementing
  * require() method and also responsible for injecting define() into each module scope.
