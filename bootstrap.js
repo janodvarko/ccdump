@@ -73,15 +73,15 @@ AboutCC.prototype =
         var ioService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
         var html = 'data:text/html,<!DOCTYPE html><html><head>\n'
             + '<link href="' + MY_URL + 'skin/classic/main.css" rel="stylesheet" type="text/css">\n'
-            + '<script src="' + MY_URL + 'content/loader.js" type="application/javascript;version=1.8"></script>\n'
+            + '<script src="' + MY_URL + 'content/loader.js" type="application/javascript"></script>\n'
             + '</head><body>\n'
             + '<script type="application/javascript">'
             + 'var config = {'
-            + '    baseUrl: "resource://ccdump/content";'
+            + '    baseUrl: "resource://ccdump/content"'
             + '}'
             + '</script>'
             + "<div id='content'></div>\n"
-            + '<script src="' + MY_URL + 'content/main.js" type="application/javascript;version=1.8"></script>\n'
+            + '<script src="' + MY_URL + 'content/main.js" type="application/javascript"></script>\n'
             + "</body></html>\n";
 
         var securityManager = Cc["@mozilla.org/scriptsecuritymanager;1"].
