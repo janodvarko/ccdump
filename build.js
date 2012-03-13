@@ -51,16 +51,30 @@ function buildWeb()
 function buildFirefox()
 {
     copy({
-        source: "license.txt",
-        dest: "license2.txt"
+        source: "content/lib/toolbar.js",
+        filter: copy.filter.uglifyjs,
+        dest: 'built.js'
     });
 
     copy({
-        source: ["license.txt", "license2.txt"],
-        dest: "output.js"
+      source: './index.html',
+      filter: [
+        function(data) {
+            return data.replace(/@VERSION@/, "0.4.1");
+        },
+        copy.filter.addDefines
+      ],
+      dest: 'index.compressed.html'
     });
-
     console.log("Firefox extension built!");
+}
+
+// ********************************************************************************************* //
+// Filters
+
+function htmlCompressor(text)
+{
+    return text;
 }
 
 // ********************************************************************************************* //
