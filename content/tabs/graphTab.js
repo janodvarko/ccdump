@@ -55,14 +55,21 @@ GraphTab.prototype = Lib.extend(BaseTab.prototype,
         var generator = new ObjectGraphGenerator(searchId);
         this.graph = generator.findGraph(this.selection);
 
+        this.renderGraph(content);
+    },
+
+    renderGraph: function(parentNode)
+    {
+        Lib.eraseNode(parentNode);
+
         if (Lib.hasProperties(this.graph))
         {
             var tree = new ObjectTree(this.graph);
-            tree.append(content, true);
+            tree.append(parentNode, true);
         }
         else
         {
-            this.noGraph.replace({}, content);
+            this.noGraph.replace({}, parentNode);
         }
     },
 
@@ -96,11 +103,17 @@ GraphTab.prototype = Lib.extend(BaseTab.prototype,
         }
 
         var content = this._body.querySelector(".tabContent");
-        if (!results.length)
-            return;
 
-        var table = new ObjectTableView();
-        table.render(content, results);
+        // Show search results if any; otherwise display the original graph.
+        if (results.length)
+        {
+            var table = new ObjectTableView();
+            table.render(content, results);
+        }
+        else
+        {
+            this.renderGraph(content);
+        }
 
         return true;
     },
