@@ -21,9 +21,9 @@ var ObjectLink = domplate(DomTree.Reps.Link,
     {
         Lib.cancelEvent(event);
 
-        // Fire navigate event. It's processed by the main application object (tabView).
+        // Fire navigate event. It's processed by {@link TabNavigator}.
         Lib.fireEvent(event.target, "navigate", {
-            type: "Details",
+            type: "tabs/detailsTab",
             selection: this.getRepObject(event.target)
         });
     },

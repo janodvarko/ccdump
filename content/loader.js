@@ -8,8 +8,6 @@ var require = (function() {
 // ********************************************************************************************* //
 // Constants
 
-var Cc = Components.classes;
-var Ci = Components.interfaces;
 var Cu = Components.utils;
 
 Cu.import("resource://gre/modules/Services.jsm");
@@ -24,7 +22,7 @@ var Loader =
 
     require: function(config, modules, callback)
     {
-        this.config = config;
+        this.config = config ? config : this.config;
         this.currentModule = [];
 
         var main = this.modules["main"] = {

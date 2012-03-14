@@ -8,10 +8,11 @@ define([
     "app/analyzer",
     "app/objectGraphGenerator",
     "tabs/graphTab",
-    "tabs/detailsTab",
     "tabs/rootsTab",
+    "tabs/pathTab",
+    "tabs/detailsTab",
 ],
-function(Lib, FBTrace, Analyzer, ObjectGraphGenerator, GraphTab, DetailsTab, RootsTab) {
+function(Lib, FBTrace, Analyzer, ObjectGraphGenerator) {
 
 // ********************************************************************************************* //
 // Navigation among application tabs
@@ -40,23 +41,31 @@ var TabNavigator =
 
         try
         {
-            var eventObj = event.object;
-            this.onSelectTab(eventObj.type, eventObj.selection);
+            var self = this;
+            var object = event.object;
+
+            // Load required tab-type. Do not provide any configuration, it has been
+            // set up in main.js already.
+            require(null, [object.type], function(tabType) {
+                self.onSelectTab(tabType, object);
+            });
         }
         catch (err)
         {
-            FBTrace.sysout("tabNavigator.onNavigate; EXCEPTION " + e, e);
+            FBTrace.sysout("tabNavigator.onNavigate; EXCEPTION " + err, err);
         }
     },
 
-    onSelectTab: function(type, selection)
+    onSelectTab: function(tabType, input)
     {
+        var selection = input.selection;
         if (typeof selection == "string")
             selection = this.tabView.analyzer.getObject(selection);
 
         if (!selection)
             return;
 
+        // xxxHonza: type hacks
         if (!(selection instanceof Analyzer.CCObject))
             selection = selection.value;
 
@@ -64,29 +73,20 @@ var TabNavigator =
             selection = selection._o;
 
         // Switch to target tab
-        var tab = this.appendTab(type);
+        var tab = this.appendTab(tabType);
         tab.invalidate();
 
-        tab.currObject = selection;
-        tab.currGraphType = type;
-
         this.tabView.selection = selection;
+        this.tabView.input = input;
         tab.select();
     },
 
-    appendTab: function(type)
+    appendTab: function(tabType)
     {
-        var tab = this.tabView.getTab(type);
+        var tab = this.tabView.getTab(tabType.prototype.id);
         if (tab)
             return tab;
 
-        var tabMap = {
-            "Graph": GraphTab,
-            "Details": DetailsTab,
-            "Roots": RootsTab,
-        };
-
-        var tabType = tabMap[type];
         var tab = this.tabView.appendTabBefore(new tabType(), "About");
         this.tabView.renderTab(tab, null, "About");
 

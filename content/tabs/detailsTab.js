@@ -30,9 +30,6 @@ DetailsTab.prototype = Lib.extend(TabView.Tab.prototype,
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Content
 
-    noSelection:
-        SPAN("No object selected"),
-
     onUpdateBody: function(tabView, body)
     {
         var selection = tabView.selection;

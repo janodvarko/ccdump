@@ -8,7 +8,7 @@ define([
     "lib/options",
     "app/objectTree",
     "app/objectGraphGenerator",
-    "app/objectTableView"
+    "app/objectTableView",
 ],
 
 function(Domplate, Lib, FBTrace, BaseTab, Options, ObjectTree, ObjectGraphGenerator,
@@ -33,9 +33,6 @@ GraphTab.prototype = Lib.extend(BaseTab.prototype,
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Content
 
-    noSelection:
-        SPAN("No object selected"),
-
     noGraph:
         SPAN("No graph found"),
 
@@ -43,9 +40,10 @@ GraphTab.prototype = Lib.extend(BaseTab.prototype,
     {
         BaseTab.prototype.onUpdateBody.apply(this, arguments);
 
+        // Render tab content.
         var content = body.querySelector(".tabContent");
-        this.selection = tabView.selection;
-        if (!this.selection)
+        var selection = tabView.selection;
+        if (!selection)
         {
             this.noSelection.replace({}, content);
             return;
@@ -53,7 +51,7 @@ GraphTab.prototype = Lib.extend(BaseTab.prototype,
 
         var searchId = this.tabView.analyzer.getSearchId();
         var generator = new ObjectGraphGenerator(searchId);
-        this.graph = generator.findGraph(this.selection);
+        this.graph = generator.findGraph(selection);
 
         this.renderGraph(content);
     },
@@ -121,9 +119,38 @@ GraphTab.prototype = Lib.extend(BaseTab.prototype,
     getSearchOptions: function()
     {
         var items = BaseTab.prototype.getSearchOptions.apply(this, arguments);
-
         return items;
     },
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Object Menu
+
+    /**
+     * Extending the "object context menu" with a new item. This extension is only applied
+     * to this tab.
+     * 
+     * @param {Object} target Clicked target element
+     * @param {Object} object Object associated with the clicked target.
+     * @param {Object} items List of items in the context menu.
+     */
+    getObjectMenuItems: function(target, object, items)
+    {
+        items.push("-");
+        items.push({
+            label: "Path to Graph Root",
+            command: Lib.bindFixed(this.onShowPath, this, target, object)
+        });
+    },
+
+    onShowPath: function(target, object)
+    {
+        // Fire navigate event. It's processed by {@link TabNavigator}.
+        Lib.fireEvent(target, "navigate", {
+            type: "tabs/pathTab",
+            selection: this.tabView.selection,
+            object: object.value._o
+        });
+    }
 });
 
 // ********************************************************************************************* //

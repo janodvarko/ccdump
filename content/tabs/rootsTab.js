@@ -32,17 +32,12 @@ RootsTab.prototype = Lib.extend(TabView.Tab.prototype,
     noAnalyses:
         SPAN("Run CC Collector to start analysis"),
 
-    noSelection:
-        SPAN("No object selected"),
-
     noRoots:
         SPAN("No roots found"),
 
     invalidate: function()
     {
         TabView.Tab.prototype.invalidate.apply(this, arguments);
-
-        this.currObject = null;
     },
 
     onUpdateBody: function(tabView, body)

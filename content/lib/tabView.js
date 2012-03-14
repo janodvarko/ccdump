@@ -294,6 +294,8 @@ TabView.prototype =
                 tab._header = tabHeaderTag.insertBefore({tab:tab}, Lib.$(parentNode, "tabBar"));
                 tab._body = tabBodyTag.insertBefore({tab:tab}, Lib.$(parentNode, "tabBodies"));
             }
+
+            tab.initialize(tab._header, tab._body);
         }
         catch (e)
         {
@@ -307,6 +309,10 @@ TabView.prototype =
 TabView.Tab = function() {}
 TabView.Tab.prototype =
 {
+    initialize: function()
+    {
+    },
+
     invalidate: function()
     {
         this._updated = false;

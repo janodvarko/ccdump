@@ -31,6 +31,20 @@ BaseTab.prototype = Lib.extend(TabView.Tab.prototype,
             DIV({"class": "tabContent"})
         ),
 
+    noSelection:
+        SPAN("No object selected"),
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Initialization
+
+    initialize: function(header, body)
+    {
+        var self = this;
+        body.addEventListener("getObjectMenuItems", function(event) {
+            self.getObjectMenuItems(event.target, event.object.object, event.object.items);
+        }, false);
+    },
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Content
 
@@ -112,6 +126,14 @@ BaseTab.prototype = Lib.extend(TabView.Tab.prototype,
     getSearchBox: function()
     {
         return Lib.getElementByClass(this._body, "searchBox");
+    },
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Object Menu
+
+    getObjectMenuItems: function(target, object, items)
+    {
+        // TODO: should be overridden by derived object to customize object context menu.
     }
 });
 

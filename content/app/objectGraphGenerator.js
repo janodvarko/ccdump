@@ -17,12 +17,13 @@ function ObjectGraphGenerator(searchId)
 
 ObjectGraphGenerator.prototype =
 {
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Graph
+
     findGraph: function(o)
     {
         if (!o)
             return null;
-
-        this.counter = 0;
 
         var res = {};
         this.getObjectGraph(o, o.address, res);
@@ -36,26 +37,68 @@ ObjectGraphGenerator.prototype =
 
         o.searchMark = this.searchId;
 
-        this.counter++;
-
         var obj = new ObjectGraphGenerator.Object(o);
         obj.name = o.name;
         res[this.ensureUniqueName(res, name)] = obj;
 
         for each (var owner in o.owners)
+            this.getObjectGraph(owner.from, owner.name ? owner.name : "<unknown-owner>", obj);
+
+        for each (var edge in o.edges)
+            this.getObjectGraph(edge.to, edge.name ? edge.name : "<unknown-edge>", obj);
+    },
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Path
+
+    findPath: function(root, obj)
+    {
+        if (!obj)
+            return null;
+
+        this.root = root;
+
+        var res = [];
+        this.getObjectPath(obj, res);
+        return res;
+    },
+
+    getObjectPath: function(o, res)
+    {
+        if (o.searchMark == this.searchId)
+            return;
+
+        o.searchMark = this.searchId;
+
+        if (o == this.root)
         {
-            this.getObjectGraph(owner.from,
-                owner.name ? owner.name : "<unknown-owner>",
-                obj);
+            res.push(o);
+            return true;
+        }
+
+        for each (var owner in o.owners)
+        {
+            if (this.getObjectPath(owner.from, res))
+            {
+                res.push(o);
+                return true;
+            }
         }
 
         for each (var edge in o.edges)
         {
-            this.getObjectGraph(edge.to,
-                edge.name ? edge.name : "<unknown-edge>",
-                obj);
+            if (this.getObjectPath(edge.to, res))
+            {
+                res.push(o);
+                return true;
+            }
         }
+
+        return false;
     },
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Helpers
 
     ensureUniqueName: function(obj, name)
     {

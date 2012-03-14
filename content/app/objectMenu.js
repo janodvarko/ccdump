@@ -34,26 +34,38 @@ var ObjectMenu = domplate(DomTree.Rep,
         if (!Lib.isLeftClick(event))
             return;
 
-        var items = this.getMenuItems(event.target);
+        var target = event.target;
+        var items = this.getMenuItems(target);
+
+        // Fire event so, other application components (e.g. the current tab)
+        // can append its own items.
+        Lib.fireEvent(target, "getObjectMenuItems", {
+            items: items,
+            object: this.getRepObject(target)
+        });
+
+        // Show the menu.
         var menu = new Menu({id: "searchOptions", items: items});
         menu.showPopup(event.target);
     },
 
     getMenuItems: function(target)
     {
+        // Tab objects can't be specified as deps since it would introduce
+        // cyclical dependencies.
         var items = [];
         items.push({
             label: "Show Details",
-            command: Lib.bindFixed(this.onNavigate, this, target, "Details")
+            command: Lib.bindFixed(this.onNavigate, this, target, "tabs/detailsTab")
         });
         items.push("-");
         items.push({
             label: "Show Roots",
-            command: Lib.bindFixed(this.onNavigate, this, target, "Roots")
+            command: Lib.bindFixed(this.onNavigate, this, target, "tabs/rootsTab")
         });
         items.push({
             label: "Show Graph",
-            command: Lib.bindFixed(this.onNavigate, this, target, "Graph")
+            command: Lib.bindFixed(this.onNavigate, this, target, "tabs/graphTab")
         });
         return items;
     },
@@ -63,7 +75,7 @@ var ObjectMenu = domplate(DomTree.Rep,
 
     onNavigate: function(target, type)
     {
-        // Fire navigate event. It's processed by the main application object (tabView).
+        // Fire navigate event. It's processed by {@link TabNavigator}.
         Lib.fireEvent(target, "navigate", {
             type: type,
             selection: this.getRepObject(target)

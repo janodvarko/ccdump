@@ -163,7 +163,7 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
     onShowRoots: function()
     {
         Lib.fireEvent(this.getTabContent(), "navigate", {
-            type: "Roots",
+            type: "tabs/rootsTab",
             selection: {value: this.tabView.analyzer.roots}
         });
     },
