@@ -1,8 +1,9 @@
 /* See license.txt for terms of usage */
 
 define([
+    "lib/trace",
 ],
-function() { with (Domplate) {
+function(FBTrace) { with (Domplate) {
 
 // ********************************************************************************************* //
 // Graph Generator

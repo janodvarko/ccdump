@@ -45,7 +45,8 @@ var TabNavigator =
             var object = event.object;
 
             // Load required tab-type. Do not provide any configuration, it has been
-            // set up in main.js already.
+            // set up in main.js already. Loading the tab modules this way solves
+            // some cyclic dependencies.
             require(null, [object.type], function(tabType) {
                 self.onSelectTab(tabType, object);
             });

@@ -60,8 +60,9 @@ PathTab.prototype = Lib.extend(BaseTab.prototype,
 
         if (Lib.hasProperties(this.path))
         {
-            var tree = new ObjectTree(this.path);
-            tree.append(parentNode, true);
+            // Render objects as a table.
+            var table = new ObjectTableView();
+            table.render(parentNode, this.path);
         }
         else
         {

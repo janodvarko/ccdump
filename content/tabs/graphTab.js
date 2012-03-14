@@ -148,7 +148,7 @@ GraphTab.prototype = Lib.extend(BaseTab.prototype,
         Lib.fireEvent(target, "navigate", {
             type: "tabs/pathTab",
             selection: this.tabView.selection,
-            object: object.value._o
+            object: object.value ? object.value._o : object
         });
     }
 });
