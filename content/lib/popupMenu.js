@@ -318,8 +318,8 @@ Menu.prototype = Lib.extend(Controller,
         x = Math.min(x, size.width - this.element.clientWidth - 30);
         x = Math.max(x, 0);
 
-        y = Math.min(y, size.height - this.element.clientHeight - 10);
-        y = Math.max(y, 0);
+        //y = Math.min(y, size.height - this.element.clientHeight - 10);
+        //y = Math.max(y, 0);
 
         this.elementStyle.left = x + "px";
         this.elementStyle.top = y + "px";
