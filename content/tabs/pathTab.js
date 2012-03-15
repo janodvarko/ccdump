@@ -7,11 +7,11 @@ define([
     "tabs/baseTab",
     "lib/options",
     "app/objectTree",
-    "app/objectGraphGenerator",
+    "app/objectGraphPathFinder",
     "app/objectTableView"
 ],
 
-function(Domplate, Lib, FBTrace, BaseTab, Options, ObjectTree, ObjectGraphGenerator,
+function(Domplate, Lib, FBTrace, BaseTab, Options, ObjectTree, ObjectGraphPathFinder,
     ObjectTableView) {
 with (Domplate) {
 
@@ -31,10 +31,13 @@ PathTab.prototype = Lib.extend(BaseTab.prototype,
     label: "Path",
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-    // Content
+    // Templates
 
     noPath:
         SPAN("No path found"),
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Content
 
     onUpdateBody: function(tabView, body)
     {
@@ -48,8 +51,9 @@ PathTab.prototype = Lib.extend(BaseTab.prototype,
         }
 
         var searchId = this.tabView.analyzer.getSearchId();
-        var generator = new ObjectGraphGenerator(searchId);
-        this.path = generator.findPath(tabView.selection, tabView.input.object);
+        var visitedId = this.tabView.analyzer.getSearchId();
+        var pathFinder = new ObjectGraphPathFinder(searchId, visitedId);
+        this.path = pathFinder.findPath(tabView.selection, tabView.input.object);
 
         this.renderPath(content);
     },
