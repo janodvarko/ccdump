@@ -36,11 +36,33 @@ GraphTab.prototype = Lib.extend(BaseTab.prototype,
     noGraph:
         SPAN("No graph found"),
 
+    infoBarItem:
+        SPAN({"class": "infoBarItem toolbarButton", title: "Cycle Collector sub-graph info"}),
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Toolbar
+
+    getToolbarButtons: function()
+    {
+        this.toolbar.noSeparators = true;
+
+        var buttons = [];
+        buttons.push({
+            id: "infoBar",
+            tag: this.infoBarItem
+        });
+
+        return buttons.concat(BaseTab.prototype.getToolbarButtons.apply(this, arguments));
+    },
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Content
+
     onUpdateBody: function(tabView, body)
     {
         BaseTab.prototype.onUpdateBody.apply(this, arguments);
 
-        // Render tab content.
+        // Render an empty tab content if there is no selection.
         var content = body.querySelector(".tabContent");
         var selection = tabView.selection;
         if (!selection)
@@ -49,9 +71,15 @@ GraphTab.prototype = Lib.extend(BaseTab.prototype,
             return;
         }
 
+        // Search the whole CC graph for subgraph related to the selected object.
         var searchId = this.tabView.analyzer.getSearchId();
         var generator = new ObjectGraphGenerator(searchId);
         this.graph = generator.findGraph(selection);
+
+        // Update infor bar item in the toolbar.
+        var label = this.toolbar.element.querySelector(".infoBarItem");
+        var text = "Collected: " + generator.counter + " objects";
+        label.innerHTML = text;
 
         this.renderGraph(content);
     },

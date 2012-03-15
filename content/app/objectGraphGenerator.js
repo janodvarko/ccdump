@@ -26,6 +26,8 @@ ObjectGraphGenerator.prototype =
         if (!o)
             return null;
 
+        this.counter = 0;
+
         var res = {};
         this.getObjectGraph(o, o.address, res);
         return res;
@@ -41,6 +43,9 @@ ObjectGraphGenerator.prototype =
         var obj = new ObjectGraphGenerator.Object(o);
         obj.name = o.name;
         res[this.ensureUniqueName(res, name)] = obj;
+
+        // Just counting number of objects in the sub-graph
+        this.counter++;
 
         for each (var owner in o.owners)
             this.getObjectGraph(owner.from, owner.name ? owner.name : "<unknown-owner>", obj);
