@@ -36,6 +36,9 @@ PathTab.prototype = Lib.extend(BaseTab.prototype,
     noPath:
         SPAN("No path found"),
 
+    progressToolbarItem:
+        SPAN({"class": "progressLabel toolbarButton", title: "Calculating the shortest path"}),
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Content
 
@@ -50,23 +53,42 @@ PathTab.prototype = Lib.extend(BaseTab.prototype,
             return;
         }
 
+        var self = this;
         var searchId = this.tabView.analyzer.getSearchId();
         var visitedId = this.tabView.analyzer.getSearchId();
-        var pathFinder = new ObjectGraphPathFinder(searchId, visitedId);
-        this.path = pathFinder.findPath(tabView.selection, tabView.input.object);
 
-        this.renderPath(content);
+        this.toolbar.setButtonText("progress", "Calculation in progress... ");
+        this.toolbar.showButton("progress");
+
+        // Calculate the shortest path from the the root to the object
+        // (based on Dijkstra's algorithm). The calculation can take some time so,
+        // it's done asynchronously.
+        var pathFinder = new ObjectGraphPathFinder(searchId, visitedId);
+        pathFinder.findPath(tabView.selection, tabView.input.object,
+        {
+            onProgress: function(progress)
+            {
+                var text = Math.round(progress*100)/100 + " %";
+                self.toolbar.setButtonText("progress", "Calculation in progress... " + text);
+            },
+
+            onFinished: function(path)
+            {
+                self.toolbar.hideButton("progress");
+                self.renderPath(content, path);
+            }
+        });
     },
 
-    renderPath: function(parentNode)
+    renderPath: function(parentNode, path)
     {
         Lib.eraseNode(parentNode);
 
-        if (Lib.hasProperties(this.path))
+        if (Lib.hasProperties(path))
         {
             // Render objects as a table.
             var table = new ObjectTableView();
-            table.render(parentNode, this.path);
+            table.render(parentNode, path);
         }
         else
         {
@@ -79,8 +101,12 @@ PathTab.prototype = Lib.extend(BaseTab.prototype,
 
     getToolbarButtons: function()
     {
-        // No search box in this tab
-        return [];
+        var buttons = [];
+        buttons.push({
+            id: "progress",
+            tag: this.progressToolbarItem
+        });
+        return buttons;
     },
 });
 

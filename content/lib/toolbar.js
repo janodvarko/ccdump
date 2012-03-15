@@ -244,7 +244,13 @@ Toolbar.prototype =
 
         if (button.hide)
             button.hide(button.element);
-    }
+    },
+
+    setButtonText: function(buttonId, text)
+    {
+        var button = this.getButton(buttonId);
+        button.element.innerHTML = text;
+    },
 };
 
 // ********************************************************************************************* //

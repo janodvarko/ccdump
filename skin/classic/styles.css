@@ -91,6 +91,20 @@ html, body {
 }
 
 /*************************************************************************************************/
+/* Path Tab */
+
+.tabPathBody .progressLabel {
+    white-space: nowrap;
+    color: gray;
+    cursor: text;
+    margin: 11px 5px 10px 5px;
+}
+
+.tabPathBody .tabToolbar {
+    height: 35px;
+}
+
+/*************************************************************************************************/
 /* Detail Tab */
 
 .tabDetailsBody {

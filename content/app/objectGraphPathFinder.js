@@ -21,69 +21,103 @@ function ObjectGraphPathFinder(searchId, visitedId)
 
 ObjectGraphPathFinder.prototype =
 {
-    findPath: function(root, obj)
+    findPath: function(root, obj, listener)
     {
         if (!obj)
             return null;
 
-        var unvisited = this.getAllNodes(root);
+        this.listener = listener;
+
+        var nodes = this.getAllNodes(root);
         root._distance = 0;
 
-        this.calculateDistances(unvisited);
+        // Remember the total lenght for progress.
+        this.totalLenght = nodes.length;
 
-        // Get the result path
-        var result = [];
-        var currentNode = obj;
-        while (currentNode && currentNode != root)
+        // Start path calculation, the result is provided asynchronously
+        var callback = function()
         {
-            result.push(currentNode);
-            currentNode = currentNode._previous;
+            // Get the result path
+            var result = [];
+            var currentNode = obj;
+            while (currentNode && currentNode != root)
+            {
+                result.push(currentNode);
+                currentNode = currentNode._previous;
+            }
+
+            result.push(root);
+
+            // Pass the result to the original callback.
+            listener.onFinished.call(listener, result);
+        };
+
+        // Start on timeout.
+        setTimeout(this.calculatePath.bind(this, nodes, callback), 125);
+    },
+
+    calculatePath: function(nodes, callback)
+    {
+        for (var i=0; i<100; i++)
+        {
+            if (!nodes.length)
+            {
+                // Done, execute the callback.
+                callback();
+                return;
+            }
+
+            this.calculateDistances(nodes);
         }
 
-        result.push(root);
-        return result;
+        var progress = 100 - (nodes.length / (this.totalLenght / 100));
+        this.listener.onProgress.call(this.listener, progress);
+
+        // There are still nodes to process, next chunk on timeout.
+        setTimeout(this.calculatePath.bind(this, nodes, callback), 125);
     },
 
     calculateDistances: function(nodes)
     {
-        while (nodes.length > 0)
+        if (!nodes.length)
+            return;
+
+        // Get the node with smallest distance. This is what makes the entire
+        // algorithm really slow. Could we effectivelly keep the array sorted?
+        var o = null, index;
+        for (var i=0; i<nodes.length; i++)
         {
-            // Get the node with smallest distance;
-            var o = null, index;
-            for (var i=0; i<nodes.length; i++)
+            var n = nodes[i];
+            if (!o || n._distance < o._distance)
             {
-                var n = nodes[i];
-                if (!o || n._distance < o._distance)
-                {
-                    o = n;
-                    index = i;
-                }
+                o = n;
+                index = i;
             }
+        }
 
-            // If true, all remaining nodes are inaccessible from source.
-            if (o._distance == Infinity)
-                break;
+        // If true, all remaining nodes are inaccessible from source.
+        if (o._distance == Infinity)
+            return;
 
-            // Remove the node from the list of unvisited nodes.
-            nodes.splice(index, 1);
-            o._visited = this._visitedId;
+        // Remove the node from the list of unvisited nodes.
+        nodes.splice(index, 1);
+        o._visited = this._visitedId;
 
-            // Evaluate distances for all neighbors.
-            var neighbors = this.getNeighbors(o);
-            for (var j=0; j<neighbors.length; j++)
+        // Evaluate distances for all neighbors.
+        var neighbors = this.getNeighbors(o);
+        for (var j=0; j<neighbors.length; j++)
+        {
+            var n = neighbors[j];
+
+            // Ignore already visited nodes.
+            if (n._visited == this._visitedId)
+                continue;
+
+            // Update distance in the neighbor node if we have shorter path.
+            if (n._distance > o._distance + 1)
             {
-                var n = neighbors[j];
-
-                // Ignore already visited nodes.
-                if (n._visited == this._visitedId)
-                    continue;
-
-                // Update distance in the neighbor node if we have shorter path.
-                if (n._distance > o._distance + 1)
-                {
-                    n._distance = o._distance + 1;
-                    n._previous = o;
-                }
+                n._distance = o._distance + 1;
+                n._previous = o;
             }
         }
     },
