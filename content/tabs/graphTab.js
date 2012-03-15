@@ -31,7 +31,7 @@ GraphTab.prototype = Lib.extend(BaseTab.prototype,
     label: "Graph",
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-    // Content
+    // Templates
 
     noGraph:
         SPAN("No graph found"),
@@ -200,10 +200,10 @@ GraphIterator.prototype =
 
     _iterate: function(obj)
     {
-        if (obj.searchMark == this.searchId)
+        if (obj._searchMark == this.searchId)
             return;
 
-        obj.searchMark = this.searchId;
+        obj._searchMark = this.searchId;
 
         this.callback(obj._o);
 

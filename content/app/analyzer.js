@@ -203,10 +203,10 @@ Analyzer.prototype =
 
     getChildObjects: function (o, res, searchGen)
     {
-        if (o.searchMark == searchGen || o.garbage)
+        if (o._searchMark == searchGen || o.garbage)
             return;
 
-        o.searchMark = searchGen;
+        o._searchMark = searchGen;
         res.push(o);
 
         for each (var edge in o.edges)
@@ -228,10 +228,10 @@ Analyzer.prototype =
 
     getRootObjects: function(o, res, searchGen, onlyRoots)
     {
-        if (o.searchMark == searchGen || o.garbage)
+        if (o._searchMark == searchGen || o.garbage)
             return;
 
-        o.searchMark = searchGen;
+        o._searchMark = searchGen;
         if (o.root)
             res.push(o);
 
@@ -252,10 +252,10 @@ Analyzer.prototype =
 
     getObjectGraph: function(o, res, searchGen)
     {
-        if (o.searchMark == searchGen || o.garbage)
+        if (o._searchMark == searchGen || o.garbage)
             return;
 
-        o.searchMark = searchGen;
+        o._searchMark = searchGen;
         res.push(o);
 
         for each (var edge in o.edges)
@@ -281,7 +281,7 @@ Analyzer.CCObject = function()
     this.knownEdges = 0;
     this.edges = [];
     this.owners = [];
-    this.searchMark = 0;
+    this._searchMark = 0;
 }
 
 Analyzer.CCObject.prototype =
@@ -298,7 +298,7 @@ Analyzer.CCObject.prototype =
         o.knownEdges = this.knownEdges;
         o.edges = Lib.cloneArray(this.edges);
         o.owners = Lib.cloneArray(this.owners);
-        o.searchMark = 0;
+        o._searchMark = 0;
         return o;
     }
 }

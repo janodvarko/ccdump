@@ -29,7 +29,7 @@ ObjectTableView.prototype = domplate(TableView.prototype,
 {
     getValueTag: function(colAndValue)
     {
-        if (colAndValue.col.property == "index")
+        if (colAndValue.col.property == "_index")
             return Index.tag;
 
         return TableView.prototype.getValueTag.apply(this, arguments);
@@ -42,7 +42,7 @@ ObjectTableView.prototype = domplate(TableView.prototype,
         for (var p in obj)
         {
             var value = obj[p];
-            value.index = index++;
+            value._index = index++;
             arr.push(value);
         }
         return arr;
@@ -51,7 +51,7 @@ ObjectTableView.prototype = domplate(TableView.prototype,
     render: function(parentNode, data, cols, limit)
     {
         cols = cols || [
-            {property: "index", label: "index", alphaValue: false},
+            {property: "_index", label: "index", alphaValue: false},
             {property: "name", rep: ObjectMenu},
             {property: "address", rep: ObjectLink},
             {property: "refcount", label: "ref", alphaValue: false},
