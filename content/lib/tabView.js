@@ -342,8 +342,7 @@ TabView.Tab.prototype =
     invalidate: function()
     {
         this._updated = false;
-        if (this._body)
-            Lib.eraseNode(this._body);
+        Lib.eraseNode(this._body);
     },
 
     select: function()
