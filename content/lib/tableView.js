@@ -57,7 +57,7 @@ TableView.prototype = domplate(
         TR({"class": "dataTableFooterRow"},
             TD({"class": "dataTableMore", colspan: "$object.columns.length"},
                 SPAN({"class": "button", onclick: "$onMore"},
-                    "Get Another $limit"
+                    "Get Next $limit"
                 ),
                 SPAN({"class": "button", onclick: "$onGetAll",
                     title: "This can be really slow in case of huge number of entries"},
