@@ -26,7 +26,7 @@ DynamicTab.prototype = Lib.extend(BaseTab.prototype,
             view: "$tab.id", _repObject: "$tab"},
             SPAN("$tab.label"),
             SPAN("&nbsp;"),
-            SPAN({"class": "image", onclick: "$tab.onCloseTab"})
+            SPAN({"class": "image", onclick: "$tab.onCloseTab", title: "Close"})
         ),
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

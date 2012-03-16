@@ -69,7 +69,8 @@ PathTab.prototype = Lib.extend(DynamicTab.prototype,
             onProgress: function(progress)
             {
                 var text = Math.round(progress*100)/100 + " %";
-                self.toolbar.setButtonText("progress", "Calculation in progress... " + text);
+                self.toolbar.setButtonText("progress", "Calculation in progress... " + text +
+                    " of the graph examined");
             },
 
             onFinished: function(path)

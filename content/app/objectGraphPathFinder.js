@@ -26,13 +26,14 @@ ObjectGraphPathFinder.prototype =
         if (!obj)
             return null;
 
+        this.obj = obj;
         this.listener = listener;
 
         var nodes = this.getAllNodes(root);
         root._distance = 0;
 
-        // Remember the total lenght for progress.
-        this.totalLenght = nodes.length;
+        // Remember the total length for progress.
+        this.totalLength = nodes.length;
 
         // Start path calculation, the result is provided asynchronously
         var callback = function()
@@ -53,34 +54,40 @@ ObjectGraphPathFinder.prototype =
         };
 
         // Start on timeout.
-        setTimeout(this.calculatePath.bind(this, nodes, callback), 125);
+        setTimeout(this.calculatePath.bind(this, nodes, callback), 250);
     },
 
     calculatePath: function(nodes, callback)
     {
         for (var i=0; i<100; i++)
         {
-            if (!nodes.length)
+            if (this.calculateDistances(nodes))
             {
                 // Done, execute the callback.
                 callback();
                 return;
             }
-
-            this.calculateDistances(nodes);
         }
 
-        var progress = 100 - (nodes.length / (this.totalLenght / 100));
+        var progress = 100 - (nodes.length / (this.totalLength / 100));
         this.listener.onProgress.call(this.listener, progress);
 
         // There are still nodes to process, next chunk on timeout.
         setTimeout(this.calculatePath.bind(this, nodes, callback), 125);
     },
 
+    /**
+     * Calculates distance for neighbors of the node that has the shortest
+     * distance from the root.
+     * Returns true if we found our target node or the rest of unvisited nodes is
+     * not accessible from the source node (ie from the root).
+     * 
+     * @param {Object} nodes Unvisited nodes.
+     */
     calculateDistances: function(nodes)
     {
         if (!nodes.length)
-            return;
+            return true;
 
         // Get the node with smallest distance. This is what makes the entire
         // algorithm really slow. Could we effectivelly keep the array sorted?
@@ -97,7 +104,11 @@ ObjectGraphPathFinder.prototype =
 
         // If true, all remaining nodes are inaccessible from source.
         if (o._distance == Infinity)
-            return;
+            return true;
+
+        // Did we found the path to our object? If yes, we are done!
+        if (o == this.obj)
+            return true;
 
         // Remove the node from the list of unvisited nodes.
         nodes.splice(index, 1);
@@ -120,6 +131,8 @@ ObjectGraphPathFinder.prototype =
                 n._previous = o;
             }
         }
+
+        return false;
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
