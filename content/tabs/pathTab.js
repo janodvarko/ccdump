@@ -4,14 +4,14 @@ define([
     "lib/domplate",
     "lib/lib",
     "lib/trace",
-    "tabs/baseTab",
+    "tabs/dynamicTab",
     "lib/options",
     "app/objectTree",
     "app/objectGraphPathFinder",
     "app/objectTableView"
 ],
 
-function(Domplate, Lib, FBTrace, BaseTab, Options, ObjectTree, ObjectGraphPathFinder,
+function(Domplate, Lib, FBTrace, DynamicTab, Options, ObjectTree, ObjectGraphPathFinder,
     ObjectTableView) {
 with (Domplate) {
 
@@ -22,7 +22,7 @@ function PathTab()
 {
 }
 
-PathTab.prototype = Lib.extend(BaseTab.prototype,
+PathTab.prototype = Lib.extend(DynamicTab.prototype,
 {
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Tab
@@ -44,7 +44,7 @@ PathTab.prototype = Lib.extend(BaseTab.prototype,
 
     onUpdateBody: function(tabView, body)
     {
-        BaseTab.prototype.onUpdateBody.apply(this, arguments);
+        DynamicTab.prototype.onUpdateBody.apply(this, arguments);
 
         var content = body.querySelector(".tabContent");
         if (!tabView.selection)

@@ -109,17 +109,43 @@ TabView.prototype =
         return this.appendTab(tab);
     },
 
-    removeTab: function(tabId)
+    removeTab: function(tabObj)
     {
         for (var i in this.tabs)
         {
             var tab = this.tabs[i];
-            if (tab.id == tabId)
+            if (tab == tabObj)
             {
                 this.tabs.splice(i, 1);
                 break;
             }
         }
+
+        // Bail out if the tab view isn't rendered yet.
+        if (!this.element)
+            return;
+
+        // Bail out if the tab itself isn't rendered yet.
+        if (!tabObj._header || !tabObj._body)
+            return;
+
+        // Select different tab if the current one is about to be removed.
+        if (Lib.hasClass(tabObj._header, "selected"))
+        {
+            var nextSelectedTab = tabObj._header.previousSibling || tabObj._header.nextSibling;
+
+            // If it's null, there is no tab now.
+            if (nextSelectedTab)
+                this.selectTab(nextSelectedTab);
+        }
+
+        // Remove the associated tab element from the UI
+        if (tabObj._header)
+            tabObj._header.parentNode.removeChild(tabObj._header);
+
+        // Remove the associated tab body element from the UI
+        if (tabObj._body)
+            tabObj._body.parentNode.removeChild(tabObj._body);
     },
 
     getTab: function(tabId)
@@ -285,9 +311,9 @@ TabView.prototype =
             if (beforeTab)
             {
                 tab._header = tabHeaderTag.insertBefore({tab:tab}, Lib.$(parentNode, "tabBar"),
-                    undefined, beforeTab._header);
+                    tab, beforeTab._header);
                 tab._body = tabBodyTag.insertBefore({tab:tab}, Lib.$(parentNode, "tabBodies"),
-                    undefined, beforeTab._body);
+                    tab, beforeTab._body);
             }
             else
             {
@@ -316,7 +342,8 @@ TabView.Tab.prototype =
     invalidate: function()
     {
         this._updated = false;
-        Lib.eraseNode(this._body);
+        if (this._body)
+            Lib.eraseNode(this._body);
     },
 
     select: function()

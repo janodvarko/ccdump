@@ -4,19 +4,19 @@ define([
     "lib/domplate",
     "lib/lib",
     "lib/trace",
-    "lib/tabView",
+    "tabs/dynamicTab",
     "app/objectTree",
     "app/objectGraphGenerator"
 ],
 
-function(Domplate, Lib, FBTrace, TabView, ObjectTree, ObjectGraphGenerator) {
+function(Domplate, Lib, FBTrace, DynamicTab, ObjectTree, ObjectGraphGenerator) {
 with (Domplate) {
 
 // ********************************************************************************************* //
 // Home Tab
 
 function DetailsTab() {}
-DetailsTab.prototype = Lib.extend(TabView.Tab.prototype,
+DetailsTab.prototype = Lib.extend(DynamicTab.prototype,
 {
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Tab

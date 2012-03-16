@@ -4,14 +4,14 @@ define([
     "lib/domplate",
     "lib/lib",
     "lib/trace",
-    "tabs/baseTab",
+    "tabs/dynamicTab",
     "lib/options",
     "app/objectTree",
     "app/objectGraphGenerator",
     "app/objectTableView",
 ],
 
-function(Domplate, Lib, FBTrace, BaseTab, Options, ObjectTree, ObjectGraphGenerator,
+function(Domplate, Lib, FBTrace, DynamicTab, Options, ObjectTree, ObjectGraphGenerator,
     ObjectTableView) {
 with (Domplate) {
 
@@ -22,7 +22,7 @@ function GraphTab()
 {
 }
 
-GraphTab.prototype = Lib.extend(BaseTab.prototype,
+GraphTab.prototype = Lib.extend(DynamicTab.prototype,
 {
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Tab
@@ -52,7 +52,7 @@ GraphTab.prototype = Lib.extend(BaseTab.prototype,
             tag: this.infoBarItem
         });
 
-        return buttons.concat(BaseTab.prototype.getToolbarButtons.apply(this, arguments));
+        return buttons.concat(DynamicTab.prototype.getToolbarButtons.apply(this, arguments));
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -60,7 +60,7 @@ GraphTab.prototype = Lib.extend(BaseTab.prototype,
 
     onUpdateBody: function(tabView, body)
     {
-        BaseTab.prototype.onUpdateBody.apply(this, arguments);
+        DynamicTab.prototype.onUpdateBody.apply(this, arguments);
 
         // Render an empty tab content if there is no selection.
         var content = body.querySelector(".tabContent");
@@ -146,7 +146,7 @@ GraphTab.prototype = Lib.extend(BaseTab.prototype,
 
     getSearchOptions: function()
     {
-        var items = BaseTab.prototype.getSearchOptions.apply(this, arguments);
+        var items = DynamicTab.prototype.getSearchOptions.apply(this, arguments);
         return items;
     },
 
