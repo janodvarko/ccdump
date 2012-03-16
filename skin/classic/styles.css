@@ -8,6 +8,7 @@ html, body {
     padding: 0px;
     font-family: Lucida Grande, Tahoma, sans-serif;
     font-size: 12px;
+    overflow: hidden;
 }
 
 *[collapsed="true"] {
@@ -24,6 +25,41 @@ html, body {
 
 .tabBody .tabContent {
     padding: 5px;
+}
+
+.tabBody .tabContent {
+    overflow: auto;
+    position: absolute;
+    top: 68px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+@media (min-width: 0) {
+    .tabBody .tabContent {
+        top: 130px;
+    }
+}
+
+@media (min-width: 581px) {
+    .tabBody .tabContent {
+        top: 99px;
+    }
+}
+
+@media (min-width: 929px) {
+    .tabBody .tabContent {
+        top: 68px;
+    }
+}
+
+.tabBody .toolbar {
+    border-bottom: none;
+}
+
+.tabBody .tabContent {
+    border-top: 1px solid #EEEEEE;
 }
 
 /*************************************************************************************************/

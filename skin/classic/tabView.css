@@ -61,7 +61,7 @@
  */
 .tabBodies {
     width: 100%;
-    overflow: auto;
+    overflow: hidden;
 }
 
 .tabBody {
@@ -81,7 +81,7 @@
 
 /* This is what prevents the browser's print featurs to print more pages. */
 .tabBodies {
-    overflow:visible;
+    overflow: visible;
 }
 
 .tabViewCol {

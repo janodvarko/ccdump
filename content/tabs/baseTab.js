@@ -9,7 +9,6 @@ define([
     "lib/options",
     "tabs/search",
 ],
-
 function(Domplate, Lib, FBTrace, TabView, Toolbar, Options, Search) {
 with (Domplate) {
 
