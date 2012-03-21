@@ -7,7 +7,7 @@
     "node": ">= 0.6.6"
   },
   "dependencies": {
-    "dryice": ">= 0.4.1",
+    "dryice": ">= 0.4.1"
   },
   "author": "Jan Odvarko <odvarko@gmail.com>",
   "repository" : {
