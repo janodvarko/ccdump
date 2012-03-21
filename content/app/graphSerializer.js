@@ -113,7 +113,7 @@ var GraphSerializer =
     serializeGraph: function(graph)
     {
         var s = "";
-        for each (var o in graph)
+        for (var o in graph)
             s += this.serializeObject(o) + "\n" + this.getEdges(o);
         return s;
     },
@@ -121,8 +121,11 @@ var GraphSerializer =
     getEdges: function(o)
     {
         var s = "";
-        for each (var e in o.edges)
+        for (var i=0; i<o.edges.length; i++)
+        {
+            var e = o.edges[i];
             s += "    > " + e.to.address + " " + e.name + "\n";
+        }
         return s;
     },
 
@@ -133,7 +136,7 @@ var GraphSerializer =
     {
         var log = {};
         log.graph = {};
-        for each (var o in analyzer.graph)
+        for (var o in analyzer.graph)
         {
             var obj = o.clone();
             log.graph[obj.address] = obj;
@@ -158,16 +161,23 @@ var GraphSerializer =
         }
 
         log.roots = [];
-        for each (var o in analyzer.roots)
+        for (var i=0; i<analyzer.roots.length; i++)
+        {
+            var o = analyzer.roots[i];
             log.roots.push(o.address);
+        }
 
         log.garbage = [];
-        for each (var o in analyzer.garbage)
+        for (var i=0; i<analyzer.garbage.length; i++)
+        {
+            var o = analyzer.garbage[i];
             log.garbage.push(o.address);
+        }
 
         log.edges = [];
-        for each (var o in analyzer.edges)
+        for (var i=0; i<analyzer.edges.length; i++)
         {
+            var o = analyzer.edges[i];
             log.edges.push({
                 name: o.name,
                 from: o.from.address,
@@ -183,7 +193,7 @@ var GraphSerializer =
         analyzer.clear();
 
         var log = JSON.parse(jsonString);
-        for each (var o in log.graph)
+        for (var o in log.graph)
         {
             var obj = analyzer.ensureObject(o.address);
             for (p in o)
@@ -204,14 +214,21 @@ var GraphSerializer =
             }
         }
 
-        for each (var o in log.roots)
-            analyzer.roots.push(analyzer.ensureObject(o));
-
-        for each (var o in log.garbage)
-            analyzer.garbage.push(analyzer.ensureObject(o));
-
-        for each (var o in log.edges)
+        for (var i=0; i<log.roots.length; i++)
         {
+            var o = log.roots[i];
+            analyzer.roots.push(analyzer.ensureObject(o));
+        }
+
+        for (var i=0; i<log.garbage.length; i++)
+        {
+            var o = log.garbage[i];
+            analyzer.garbage.push(analyzer.ensureObject(o));
+        }
+
+        for (var i=0; i<log.edges.length; i++)
+        {
+            var o = log.edges[i];
             analyzer.edges.push({
                 name: o.name,
                 from: analyzer.ensureObject(o.from),
