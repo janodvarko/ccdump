@@ -3,8 +3,10 @@ var copy = require('dryice').copy;
 var fs = require('fs');
 var os = require('os');
 var spawn = require('child_process').spawn;
+var shell = require('shelljs');
 
 var release = __dirname + '/release';
+
 copy.mkdirSync(release + '/content', 0755);
 copy({
   source: {
@@ -24,7 +26,7 @@ copy({
 });
 
 copy({
-  source: [ 'bootstrap.js', 'license.txt', 'README.md' ],
+  source: [ 'bootstrap.js', 'license.txt', 'README.md', 'app.properties' ],
   dest: release
 });
 
@@ -38,10 +40,15 @@ copy({
   dest: release
 });
 
+var zip;
 if (os.platform() === 'win32') {
-  var params = 'a ccdump.xpi skin content bootstrap.js license.txt README.md install.rdf';
-  spawn('7z.exe', [ params.split(' ') ], { cwd: release });
+  var params = 'a -tzip ../ccdump.xpi skin content bootstrap.js license.txt README.md install.rdf app.properties';
+  zip = spawn('7z.exe', params.split(' '), { cwd: release });
 }
 else {
-  spawn('zip', [ '-r', __dirname + '/ccdump.xpi', release ]);
+  zip = spawn('zip', [ '-r', __dirname + '/ccdump.xpi', release ]);
 }
+
+zip.on("exit", function() {
+  shell.rm('-rf', 'release');
+});
