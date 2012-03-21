@@ -1,0 +1,20 @@
+{
+  "name": "ccdump",
+  "description": "Cycle Collector Analyzer Tool",
+  "version": "0.4.2",
+  "homepage" : "http://www.softwareishard.com/blog/ccdump",
+  "engines": {
+    "node": ">= 0.6.6"
+  },
+  "dependencies": {
+    "dryice": ">= 0.4.1",
+  },
+  "author": "Jan Odvarko <odvarko@gmail.com>",
+  "repository" : {
+    "type" : "git",
+     "url" : "git://github.com/janodvarko/ccdump.git"
+  },
+  "licenses": [
+    { "type": "BSD", "url": "http://opensource.org/licenses/BSD-3-Clause" }
+  ]
+}
