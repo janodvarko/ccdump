@@ -3,7 +3,7 @@
 // ********************************************************************************************* //
 // Module Loader Implementation
 
-var require = (function() {
+var Loader = (function() {
 
 // ********************************************************************************************* //
 // Constants
@@ -17,8 +17,12 @@ Cu.import("resource://gre/modules/Services.jsm");
 
 var Loader =
 {
-    config: null,
+    config: {
+    	baseUrl: "resource://ccdump/content"
+    },
+
     modules: {},
+    currentModule: [],
 
     require: function(config, modules, callback)
     {
@@ -64,7 +68,7 @@ var Loader =
         try
         {
             this.currentModule.push(module);
-            var moduleUrl = config.baseUrl + "/" + moduleId + ".js";
+            var moduleUrl = this.config.baseUrl + "/" + moduleId + ".js";
             Services.scriptloader.loadSubScript(moduleUrl, module.scope);
         }
         catch (err)
@@ -83,7 +87,10 @@ var Loader =
 
 // ********************************************************************************************* //
 
-return Loader.require.bind(Loader);
+return Loader;
 
 // ********************************************************************************************* //
 })();
+
+var require = Loader.require.bind(Loader);
+var define = Loader.define.bind(Loader);

@@ -7,13 +7,32 @@ var shell = require('shelljs');
 
 var release = __dirname + '/release';
 
+shell.rm('-rf', 'release');
+
 copy.mkdirSync(release + '/content', 0755);
 copy({
   source: {
     root: __dirname + '/content',
-    include: [ /.*\.js$/, /.*\.html$/ ]
+    include: [ /.*\.html$/ ]
   },
   dest: release + '/content'
+});
+
+copy({
+  source: [ 'content/loader.js' ],
+  dest: release
+});
+
+copy({
+  source: [
+    {
+      root: __dirname + '/content',
+      exclude: [/loader.js/, /main.js/],
+      include: [ /.*\.js$/ ]
+    },
+    __dirname + '/content/main.js'
+  ],
+  dest: release + '/content/main.js'
 });
 
 copy.mkdirSync(release + '/skin', 0755);
@@ -50,5 +69,5 @@ else {
 }
 
 zip.on("exit", function() {
-  shell.rm('-rf', 'release');
+  //shell.rm('-rf', 'release');
 });
