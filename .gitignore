@@ -1,0 +1,21 @@
+
+# Build artifacts
+/release
+
+# Junk that could exist anywhere:
+.DS_Store
+*.swp
+*.tmp
+.*.gz
+
+# Editor junk
+/.project
+/.pydevproject
+/.settings/
+/.settings.xml
+/.settings.xml.old
+/.idea/
+
+# Manually installed node packages should be ignored
+/node_modules/
+/.externalToolBuilders
