@@ -90,5 +90,5 @@ else {
 }
 
 zip.on("exit", function() {
-  //shell.rm('-rf', 'release');
+  shell.rm('-rf', 'release');
 });
