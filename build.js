@@ -23,17 +23,38 @@ copy({
   dest: release
 });
 
+var project = copy.createCommonJsProject({
+  roots: [ __dirname + '/content' ]
+});
+
+/**
+ * Munge define lines to add module names
+ */
+function moduleDefines(input, source) {
+  input = (typeof input !== 'string') ? input.toString() : input;
+  var deps = source.deps ? Object.keys(source.deps) : [];
+  deps = deps.length ? (", '" + deps.join("', '") + "'") : "";
+  var module = source.isLocation ? source.path : source;
+  module = module.replace(/\.js$/, '');
+  return input.replace(/define\(\[/, 'define("' + module + '", [');
+};
+moduleDefines.onRead = true;
+
 copy({
   source: [
     {
-      root: __dirname + '/content',
-      exclude: [/loader.js/, /main.js/],
-      include: [ /.*\.js$/ ]
+      project: project,
+      require: [
+        'lib/tabView', 'lib/lib', 'lib/trace', 'tabs/homeTab', 'tabs/aboutTab',
+        'app/analyzer', 'app/tabNavigator', 'lib/options',
+      ]
     },
     __dirname + '/content/main.js'
   ],
+  filter: moduleDefines,
   dest: release + '/content/main.js'
 });
+console.log(project.report());
 
 copy.mkdirSync(release + '/skin', 0755);
 copy({
@@ -69,5 +90,5 @@ else {
 }
 
 zip.on("exit", function() {
-  shell.rm('-rf', 'release');
+  //shell.rm('-rf', 'release');
 });
