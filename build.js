@@ -20,7 +20,7 @@ copy({
 
 copy({
   source: [ copy.getMiniRequire() ],
-  dest: release + '/loader.js'
+  dest: release + '/content/loader.js'
 });
 
 var project = copy.createCommonJsProject({
@@ -42,7 +42,6 @@ moduleDefines.onRead = true;
 
 copy({
   source: [
-    copy.getMiniRequire(),
     {
       project: project,
       require: [
