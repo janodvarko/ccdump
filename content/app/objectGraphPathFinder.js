@@ -142,11 +142,17 @@ ObjectGraphPathFinder.prototype =
     {
         var result = [];
 
-        for each (var owner in o.owners)
+        for (var i=0; i<o.owners.length; i++)
+        {
+            var owner = o.owners[i];
             result.push(owner.from);
+        }
 
-        for each (var edge in o.edges)
+        for (var i=0; i<o.edges.length; i++)
+        {
+            var edge = o.edges[i];
             result.push(edge.to);
+        }
 
         return result;
     },
@@ -167,11 +173,17 @@ ObjectGraphPathFinder.prototype =
         o._distance = Infinity;
         o._previous = null;
 
-        for each (var owner in o.owners)
+        for (var i=0; i<o.owners.length; i++)
+        {
+            var owner = o.owners[i];
             this.getAllNodes(owner.from, nodes);
+        }
 
-        for each (var edge in o.edges)
+        for (var i=0; i<o.edges.length; i++)
+        {
+            var edge = o.edges[i];
             this.getAllNodes(edge.to, nodes);
+        }
 
         return nodes;
     },

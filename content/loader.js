@@ -18,7 +18,7 @@ Cu.import("resource://gre/modules/Services.jsm");
 var Loader =
 {
     config: {
-    	baseUrl: "resource://ccdump/content"
+        baseUrl: "resource://ccdump/content"
     },
 
     modules: {},
@@ -40,8 +40,11 @@ var Loader =
     define: function(modules, callback)
     {
         var args = [];
-        for each (var id in modules)
+        for (var i=0; i<modules.length; i++)
+        {
+            var id = modules[i];
             args.push(this.loadModule(id));
+        }
 
         try
         {

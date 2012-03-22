@@ -47,11 +47,17 @@ ObjectGraphGenerator.prototype =
         // Just counting number of objects in the sub-graph
         this.counter++;
 
-        for each (var owner in o.owners)
+        for (var i=0; i<o.owners.length; i++)
+        {
+            var owner = o.owners[i];
             this.getObjectGraph(owner.from, owner.name ? owner.name : "<unknown-owner>", obj);
+        }
 
-        for each (var edge in o.edges)
+        for (var i=0; i<o.edges.length; i++)
+        {
+            var edge = o.edges[i];
             this.getObjectGraph(edge.to, edge.name ? edge.name : "<unknown-edge>", obj);
+        }
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -33,8 +33,9 @@ ObjectFinder.prototype =
         var regex = new RegExp(text);
 
         var result = [];
-        for each (var o in this.graph)
+        for (var address in this.graph)
         {
+            var o = this.graph[address];
             var name = o.name;
             var address = o.address;
 
