@@ -56,6 +56,12 @@ copy({
 });
 console.log(project.report());
 
+copy({
+  source: release + "/content/main.js",
+  filter: copy.filter.uglifyjs,
+  dest: release + '/content/main.js'
+});
+
 copy.mkdirSync(release + '/skin', 0755);
 copy({
   source: {
@@ -90,5 +96,5 @@ else {
 }
 
 zip.on("exit", function() {
-  shell.rm('-rf', 'release');
+  //shell.rm('-rf', 'release');
 });
