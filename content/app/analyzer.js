@@ -171,8 +171,9 @@ Analyzer.prototype =
     getDocuments: function()
     {
         var result = [];
-        for each (var o in this.graph)
+        for (var i = 0; i < this.graph.length; i++)
         {
+            var o = this.graph[i];
             if (!o.garbage && o.name.indexOf("nsDocument ") >= 0)
                 result.push(o);
         }
@@ -182,8 +183,9 @@ Analyzer.prototype =
     getRoots: function()
     {
         var collectedRoots = {};
-        for each (var o in this.roots)
+        for (var i = 0; i < this.roots.length; i++)
         {
+            var o = this.roots[i];
             var res = [];
             this.getChildObjects(o, res, ++searchGeneration);
             collectedRoots[o.address] = res;
@@ -209,8 +211,10 @@ Analyzer.prototype =
         o._searchMark = searchGen;
         res.push(o);
 
-        for each (var edge in o.edges)
+        for (var i = 0; i < o.edges.length; i++) {
+            var edge = o.edges[i];
             this.getChildObjects(edge.to, res, searchGen);
+        }
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -235,8 +239,10 @@ Analyzer.prototype =
         if (o.root)
             res.push(o);
 
-        for each (var owner in o.owners)
+        for (var i = 0; i < o.owners.length; i++) {
+            var owner = o.owners[i];
             this.getRootObjects(owner.from, res, searchGen);
+        }
     },
 
     findGraph: function(addr)
@@ -258,11 +264,15 @@ Analyzer.prototype =
         o._searchMark = searchGen;
         res.push(o);
 
-        for each (var edge in o.edges)
+        for (var i = 0; i < o.edges.length; i++) {
+            var edge = o.edges[i];
             this.getObjectGraph(edge.to, res, searchGen);
+        }
 
-        for each (var owner in o.owners)
+        for (var i = 0; i < o.owners.length; i++) {
+            var owner = o.owners[i];
             this.getObjectGraph(owner.from, res, searchGen);
+        }
 
         return res;
     }

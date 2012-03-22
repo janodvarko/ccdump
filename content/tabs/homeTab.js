@@ -187,8 +187,9 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
 
         // Make sure the other tabs doesn't contain any references to the current graph.
         // It would dramatically increase number of objects in the next CC graph.
-        for each (var tab in this.tabView.tabs)
+        for (var i = 0; i < this.tabView.tabs.length; i++)
         {
+            var tab = this.tabView.tabs[i];
             if (tab != this)
                 tab.invalidate();
         }
