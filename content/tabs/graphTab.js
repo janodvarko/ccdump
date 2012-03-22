@@ -207,8 +207,9 @@ GraphIterator.prototype =
 
         this.callback(obj._o);
 
-        for each (var child in obj)
+        for (var prop in obj)
         {
+            var child = obj[prop];
             if (child instanceof ObjectGraphGenerator.Object)
                 this._iterate(child);
         }
