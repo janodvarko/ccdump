@@ -110,23 +110,26 @@ copy({
     dest: release
 });
 
+// Compute name of the XPI package
+var xpiFileName = "ccdump-" + version + ".xpi";
+
 // Create final XPI package.
 var zip;
 if (os.platform() === "win32")
 {
-    var params = "a -tzip ../ccdump.xpi skin content bootstrap.js license.txt " +
+    var params = "a -tzip ../" + xpiFileName + " skin content bootstrap.js license.txt " +
         "README.md install.rdf app.properties";
     zip = spawn("7z.exe", params.split(" "), { cwd: release });
 }
 else
 {
-    zip = spawn("zip", [ "-r", __dirname + "/ccdump.xpi", release ]);
+    zip = spawn("zip", [ "-r", __dirname + "/" + xpiFileName, release ]);
 }
 
 // As soon as the XPI is created (asynchronously) remove the release directory.
 zip.on("exit", function()
 {
-  shell.rm("-rf", "release");
+    shell.rm("-rf", "release");
 });
 
 // ********************************************************************************************* //
