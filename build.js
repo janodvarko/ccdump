@@ -59,17 +59,17 @@ moduleDefines.onRead = true;
 // Use 'moduleDefins' filter that provides module ID for define functions
 copy({
     source: [
-    {
-        project: project,
-        require: [
-            "lib/tabView", "lib/lib", "lib/trace", "tabs/homeTab", "tabs/aboutTab",
-            "app/analyzer", "app/tabNavigator", "lib/options",
-        ]
-    },
-    __dirname + "/content/main.js"
-  ],
-  filter: moduleDefines,
-  dest: release + "/content/main.js"
+        {
+            project: project,
+            require: [
+                "lib/tabView", "lib/lib", "lib/trace", "tabs/homeTab", "tabs/aboutTab",
+                "app/analyzer", "app/tabNavigator", "lib/options",
+            ]
+        },
+        __dirname + "/content/main.js"
+    ],
+    filter: moduleDefines,
+    dest: release + "/content/main.js"
 });
 
 // Helper log of module dependencies

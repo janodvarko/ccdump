@@ -3,7 +3,7 @@
 // ********************************************************************************************* //
 // Module Loader Implementation
 
-var Loader = (function() {
+var require = (function() {
 
 // ********************************************************************************************* //
 // Constants
@@ -17,10 +17,6 @@ Cu.import("resource://gre/modules/Services.jsm");
 
 var Loader =
 {
-    config: {
-        baseUrl: "resource://ccdump/content"
-    },
-
     modules: {},
     currentModule: [],
 
@@ -37,12 +33,20 @@ var Loader =
         this.define(modules, callback);
     },
 
-    define: function(modules, callback)
+    define: function(moduleName, deps, callback)
     {
-        var args = [];
-        for (var i=0; i<modules.length; i++)
+        // Module name doesn't have to be specified.
+        if (arguments.length == 2)
         {
-            var id = modules[i];
+            callback = deps;
+            deps = moduleName;
+            moduleName = undefined;
+        }
+
+        var args = [];
+        for (var i=0; i<deps.length; i++)
+        {
+            var id = deps[i];
             args.push(this.loadModule(id));
         }
 
@@ -68,14 +72,16 @@ var Loader =
             define: this.define.bind(this)
         }
 
+        var moduleUrl = this.getModuleUrl(moduleId) + ".js";
+
         try
         {
             this.currentModule.push(module);
-            var moduleUrl = this.config.baseUrl + "/" + moduleId + ".js";
             Services.scriptloader.loadSubScript(moduleUrl, module.scope);
         }
         catch (err)
         {
+            Cu.reportError(moduleUrl);
             Cu.reportError(err);
         }
         finally
@@ -85,15 +91,52 @@ var Loader =
 
         // Exports (the module return value in case of AMD) is set in define function.
         return module.exports;
+    },
+
+    load: function(context, fullPath, url)
+    {
+        //xxxHonza: Remaping moved modules
+    },
+
+    getModuleUrl: function(moduleId)
+    {
+        var baseUrl = this.config.baseUrl;
+        if (baseUrl.substr(-1) != "/")
+            baseUrl += "/";
+
+        // If there are no aliases just use baseUrl.
+        if (!this.config.paths)
+            return baseUrl + moduleId;
+
+        // Get module id path parts (excluding the module name).
+        var parts = moduleId.split("/");
+        var moduleName = parts.pop();
+
+        var self = this;
+        var resolved = parts.map(function(part)
+        {
+            var alias = self.config.paths[part];
+            return alias ? alias : part;
+        });
+
+        var moduleUrl = resolved.join("/");
+        if (moduleUrl.substr(-1) != "/")
+            moduleUrl += "/";
+
+        moduleUrl += moduleName;
+
+        var reProtocol = /^[^:]+(?=:\/\/)/;
+        if (moduleUrl.match(reProtocol))
+            return moduleUrl;
+
+        // If there is no protocol, use baseUrl.
+        return baseUrl + moduleUrl;
     }
 }
 
 // ********************************************************************************************* //
 
-return Loader;
+return Loader.require.bind(Loader);
 
 // ********************************************************************************************* //
 })();
-
-var require = Loader.require.bind(Loader);
-var define = Loader.define.bind(Loader);
