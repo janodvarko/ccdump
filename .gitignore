@@ -8,6 +8,10 @@
 *.swp
 *.tmp
 .*.gz
+*.xpi
+
+# Temporary files created by Eclipse
+.tmp*
 
 # Editor junk
 /.project
@@ -20,3 +24,6 @@
 # Manually installed node packages should be ignored
 /node_modules/
 /.externalToolBuilders
+
+# Extensions
+ccdump@getfirebug.com
