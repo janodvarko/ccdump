@@ -136,9 +136,11 @@ var GraphSerializer =
     {
         var log = {};
         log.graph = {};
-        for (var o in analyzer.graph)
+        for (var address in analyzer.graph)
         {
+            var o = analyzer.graph[address];
             var obj = o.clone();
+
             log.graph[obj.address] = obj;
 
             var edges = obj.edges;
@@ -193,8 +195,9 @@ var GraphSerializer =
         analyzer.clear();
 
         var log = JSON.parse(jsonString);
-        for (var o in log.graph)
+        for (var address in log.graph)
         {
+            var o = log.graph[address];
             var obj = analyzer.ensureObject(o.address);
             for (p in o)
                 obj[p] = o[p];
