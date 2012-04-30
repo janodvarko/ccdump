@@ -73,6 +73,7 @@ AboutCC.prototype =
         var ioService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
         var html = 'data:text/html,<!DOCTYPE html><html><head>\n'
             + '<link href="' + MY_URL + 'skin/classic/main.css" rel="stylesheet" type="text/css">\n'
+            + '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n'
             + '<script src="' + MY_URL + 'content/loader.js" type="application/javascript;version=1.8"></script>\n'
             + '</head><body>\n'
             + "<div id='content'></div>\n"
