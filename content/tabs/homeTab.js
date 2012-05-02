@@ -10,10 +10,11 @@ define([
     "app/graphSerializer",
     "lib/options",
     "app/objectTableView",
-    "app/objectFinder"
+    "app/objectFinder",
+    "app/gcLogLoader",
 ],
 function(Domplate, Lib, BaseTab, FBTrace, ObjectTree, Search, GraphSerializer, Options,
-    ObjectTableView, ObjectFinder) {
+    ObjectTableView, ObjectFinder, GCLogLoader) {
 
 with (Domplate) {
 
@@ -99,9 +100,15 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         });
 
         items.push("-");
+
         items.push({
             label: "Load From File",
             command: this.onLoad.bind(this)
+        });
+
+        items.push({
+            label: "Load From GC Log",
+            command: this.onLoadGCLog.bind(this)
         });
 
         return items;
@@ -144,7 +151,6 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         {
             return GraphSerializer.toJSON(self.tabView.analyzer);
         });
-        
     },
 
     onLoad: function()
@@ -153,6 +159,15 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
 
         GraphSerializer.loadFromFile(this.tabView.analyzer);
         this.onFinished(this.tabView.analyzer);
+    },
+
+    onLoadGCLog: function()
+    {
+        this.tabView.analyzer.clear();
+        this.tabView.analyzer.callback = this;
+
+        var loader = new GCLogLoader(this.tabView.analyzer);
+        loader.loadFromFile();
     },
 
     onCleanUp: function()
