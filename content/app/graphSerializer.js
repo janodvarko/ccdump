@@ -37,7 +37,7 @@ var GraphSerializer =
             {
                 var foStream = Cc["@mozilla.org/network/file-output-stream;1"]
                     .createInstance(Ci.nsIFileOutputStream);
-                foStream.init(fp.file, 0x02 | 0x08 | 0x20, 0666, 0); // write, create, truncate
+                foStream.init(fp.file, 0x02 | 0x08 | 0x20, 438 /* 0666 */, 0); // write, create, truncate
 
                 var text = callback();
                 if (!text)
@@ -66,7 +66,7 @@ var GraphSerializer =
 
             var rv = fp.show();
             if (rv != nsIFilePicker.returnOK)
-                return;
+                return null;
 
             var inputStream = Cc["@mozilla.org/network/file-input-stream;1"]
                 .createInstance(Ci.nsIFileInputStream);
@@ -81,8 +81,10 @@ var GraphSerializer =
         }
         catch (err)
         {
-            FBTrace.sysout("serializer; saveToFile EXCEPTION " + err, err);
+            FBTrace.sysout("serializer; loadFromFile EXCEPTION " + err, err);
         }
+
+        return null;
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
