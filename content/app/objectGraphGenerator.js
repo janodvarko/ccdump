@@ -21,16 +21,45 @@ ObjectGraphGenerator.prototype =
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Graph
 
-    findGraph: function(o)
+    findGraph: function(o, callback)
     {
         if (!o)
             return null;
 
+        this.callback = callback;
         this.counter = 0;
 
-        var res = {};
-        this.getObjectGraph(o, o.address, res);
-        return res;
+        this.res = {};
+
+        this.queue = [{
+            o: o,
+            name: o.address,
+            res: this.res
+        }];
+
+        // Start asynchronous processing of the graph.
+        this.process();
+    },
+
+    process: function()
+    {
+        for (var i=0; i<1000; i++)
+        {
+            if (!this.queue.length)
+            {
+                FBTrace.sysout("objectGraphGenerator.findGraph; DONE", this.res);
+                this.callback(this.res);
+                return;
+            }
+
+            var o = this.queue.shift();
+            this.getObjectGraph(o.o, o.name, o.res);
+        }
+
+        FBTrace.sysout("objectGraphGenerator.findGraph; PROGRESS " + this.queue.length);
+
+        // Next chunk on timeout.
+        setTimeout(this.process.bind(this), 125);
     },
 
     getObjectGraph: function(o, name, res)
@@ -47,16 +76,26 @@ ObjectGraphGenerator.prototype =
         // Just counting number of objects in the sub-graph
         this.counter++;
 
-        for (var i=0; i<o.owners.length; i++)
+        /*for (var i=0; i<o.owners.length; i++)
         {
             var owner = o.owners[i];
-            this.getObjectGraph(owner.from, owner.name ? owner.name : "<unknown-owner>", obj);
-        }
+            this.queue.push({
+                o: owner.from,
+                name: owner.name ? owner.name : "<unknown-owner>",
+                res: obj
+            });
+            //this.getObjectGraph(owner.from, owner.name ? owner.name : "<unknown-owner>", obj);
+        }*/
 
         for (var i=0; i<o.edges.length; i++)
         {
             var edge = o.edges[i];
-            this.getObjectGraph(edge.to, edge.name ? edge.name : "<unknown-edge>", obj);
+            this.queue.push({
+                o: edge.to,
+                name: edge.name ? edge.name : "<unknown-edge>",
+                res: obj
+            });
+            //this.getObjectGraph(edge.to, edge.name ? edge.name : "<unknown-edge>", obj);
         }
     },
 
@@ -66,9 +105,9 @@ ObjectGraphGenerator.prototype =
     ensureUniqueName: function(obj, name)
     {
         var newName = name;
-        var counter = 0;
+        //var counter = 0;
         while (obj[newName])
-            newName = name + " {" + (++counter) + "}";
+            newName = name + " {" + (Math.random()) + "}";
         return newName;
     }
 }

@@ -74,14 +74,19 @@ GraphTab.prototype = Lib.extend(DynamicTab.prototype,
         // Search the whole CC graph for subgraph related to the selected object.
         var searchId = this.tabView.analyzer.getSearchId();
         var generator = new ObjectGraphGenerator(searchId);
-        this.graph = generator.findGraph(selection);
 
-        // Update infor bar item in the toolbar.
-        var label = this.toolbar.element.querySelector(".infoBarItem");
-        var text = "Collected: " + generator.counter + " objects";
-        label.innerHTML = text;
+        var self = this;
+        generator.findGraph(selection, function(graph)
+        {
+            self.graph = graph;
 
-        this.renderGraph(content);
+            // Update info bar item in the toolbar.
+            var label = self.toolbar.element.querySelector(".infoBarItem");
+            var text = "Collected: " + generator.counter + " objects";
+            label.innerHTML = text;
+
+            self.renderGraph(content);
+        });
     },
 
     renderGraph: function(parentNode)
