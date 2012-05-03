@@ -107,7 +107,7 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         });
 
         items.push({
-            label: "Load From GC Log",
+            label: "Load From CC/GC Log",
             command: this.onLoadGCLog.bind(this)
         });
 
