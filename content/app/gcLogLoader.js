@@ -118,16 +118,22 @@ GCLogLoader.prototype =
         var o = this.analyzer.ensureObject(address);
         o.address = address;
 
+        // The B indicates that the object has been marked black by the GC, which means that
+        // it was reachable from a JS root, like a stack variable, or that the cycle collector
+        // optimizations have decided it is definitely alive, for instance, if it is reachable
+        // from a DOM that is currently being displayed.  Another possibility is G (gray),
+        // which means it is reachable from an XPConnect root, but hasn't been marked black,
+        // and W (white) which means an object has been allocated since the last GC.
+        // http://groups.google.com/group/mozilla.dev.platform/browse_thread/thread/593ad331506c3d20?hl=en#
+        var flag = parts.shift();
+
         // Get object name
-        if (parts.length == 3)
-            o.name = parts[1];
-        else if (parts.length > 3)
-            o.name = "[" + parts[1] + "] " + parts[2];
+        o.name = parts.join(" ");
 
         if (child)
         {
-            parent.edges.push({name: "prop", to: o});
-            o.owners.push({name: "parent", from: parent});
+            parent.edges.push({name: o.name, to: o});
+            o.owners.push({name: parent.name, from: parent});
         }
 
         this.analyzer.edges.push({
