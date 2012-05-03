@@ -95,14 +95,14 @@ GCLogLoader.prototype =
 
     onFinished: function()
     {
-        this.analyzer.callback.onFinished.call(this.analyzer.callback, this.analyzer);
         this.fis.close();
+        this.analyzer.callback.onFinished.call(this.analyzer.callback, this.analyzer);
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Parser
 
-    parseLine: function(line, parent, analy)
+    parseLine: function(line, parent)
     {
         var parts = line.split(" ");
 
