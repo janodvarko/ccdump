@@ -166,6 +166,8 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         this.tabView.analyzer.clear();
         this.tabView.analyzer.callback = this;
 
+        this.toolbar.disableButton("run");
+
         var loader = new GCLogLoader(this.tabView.analyzer);
         loader.loadFromFile();
     },
