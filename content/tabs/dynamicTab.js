@@ -34,6 +34,8 @@ DynamicTab.prototype = Lib.extend(BaseTab.prototype,
 
     onCloseTab: function(event)
     {
+        Lib.cancelEvent(event);
+
         // Remove itself from the list of tabs.
         this.tabView.removeTab(this);
     }
