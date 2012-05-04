@@ -16,8 +16,12 @@ function(Domplate, Lib, FBTrace, DynamicTab, Options, ObjectTree, ObjectGraphGen
 with (Domplate) {
 
 // ********************************************************************************************* //
-// Home Tab
+// Graph Tab
 
+/**
+ * This tab is responsible for displaying a sub-graph of objects that are related
+ * (through and edge) directly or idirectly to the selected object.
+ */
 function GraphTab()
 {
 }
@@ -72,21 +76,11 @@ GraphTab.prototype = Lib.extend(DynamicTab.prototype,
         }
 
         // Search the whole CC graph for subgraph related to the selected object.
+        // The processing is done asynchronously. This tab object is used for callbacks
+        // (onProgress and onFinish)
         var searchId = this.tabView.analyzer.getSearchId();
-        var generator = new ObjectGraphGenerator(searchId);
-
-        var self = this;
-        generator.findGraph(selection, function(graph)
-        {
-            self.graph = graph;
-
-            // Update info bar item in the toolbar.
-            var label = self.toolbar.element.querySelector(".infoBarItem");
-            var text = "Collected: " + generator.counter + " objects";
-            label.innerHTML = text;
-
-            self.renderGraph(content);
-        });
+        this.generator = new ObjectGraphGenerator(searchId);
+        this.generator.findGraph(selection, this);
     },
 
     renderGraph: function(parentNode)
@@ -102,6 +96,44 @@ GraphTab.prototype = Lib.extend(DynamicTab.prototype,
         {
             this.noGraph.replace({}, parentNode);
         }
+    },
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Progress
+
+    onProgress: function(generator)
+    {
+        var label = this.toolbar.element.querySelector(".infoBarItem");
+        var text = "Objects to process: " + generator.stack.length;
+        label.innerHTML = text;
+    },
+
+    onFinish: function(generator)
+    {
+        this.graph = generator.graph;
+
+        // Update info bar item in the toolbar.
+        var label = this.toolbar.element.querySelector(".infoBarItem");
+        var text = "Collected: " + generator.counter + " objects";
+        label.innerHTML = text;
+
+        var content = this.getTabContent();
+        this.renderGraph(content);
+
+        this.generator = null;
+    },
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Handlers
+
+    /**
+     * Executed when the tab is closed.
+     */
+    onClose: function()
+    {
+        // If graph generator is currently in progress cancel it.
+        if (this.generator)
+            this.generator.cancel();
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -133,7 +165,7 @@ GraphTab.prototype = Lib.extend(DynamicTab.prototype,
             });
         }
 
-        var content = this._body.querySelector(".tabContent");
+        var content = this.getTabContent();
 
         // Show search results if any; otherwise display the original graph.
         if (results.length)
@@ -188,6 +220,7 @@ GraphTab.prototype = Lib.extend(DynamicTab.prototype,
 
 // ********************************************************************************************* //
 
+// This iterator is used for searching within the current sub-graph.
 function GraphIterator(graph)
 {
     this.graph = graph;

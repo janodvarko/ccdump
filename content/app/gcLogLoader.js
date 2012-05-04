@@ -17,8 +17,19 @@ var converter = Cc["@mozilla.org/intl/scriptableunicodeconverter"]
 converter.charset = "UTF-8";
 
 // ********************************************************************************************* //
-// Serializer
+// Loader Implementation
 
+/**
+ * This loader is responsible for loading CC and GC logs generated using the following script:
+ *
+ * window.QueryInterface(Components.interfaces.nsIInterfaceRequestor).
+ *      getInterface(Components.interfaces.nsIDOMWindowUtils).
+ *      cycleCollect(Components.classes["@mozilla.org/cycle-collector-logger;1"].
+ *          createInstance(Components.interfaces.nsICycleCollectorListener));
+ *
+ * The script can be executed in Firefox Error Console or Scratchpad
+ * See also: https://wiki.mozilla.org/Performance:Leak_Tools
+ */
 function GCLogLoader(analyzer)
 {
     this.analyzer = analyzer;
@@ -51,6 +62,8 @@ GCLogLoader.prototype =
             this.parent = null;
 
             this.lis = this.fis.QueryInterface(Ci.nsILineInputStream);
+
+            // Asynchronously read the entire file. It's closed at the end.
             this.readFile();
         }
         catch (err)
@@ -60,6 +73,7 @@ GCLogLoader.prototype =
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Asynchronous Processing
 
     readFile: function()
     {
@@ -75,11 +89,12 @@ GCLogLoader.prototype =
             if (obj)
                 this.parent = obj;
 
-            // If last line has been parsed, bail out.
+            // If the last line has been parsed it's done.
             if (!cont)
                 return this.onFinished();
         }
 
+        // Update progress in the UI.
         this.onProgress();
 
         // Next chunk on timeout.
@@ -87,6 +102,7 @@ GCLogLoader.prototype =
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Callbacks
 
     onProgress: function()
     {
