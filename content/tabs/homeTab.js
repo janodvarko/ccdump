@@ -74,7 +74,7 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
 
         buttons.push({
             id: "save",
-            tooltiptext: "Save the log into a file",
+            tooltiptext: "Save the log into a file (JSON)",
             className: "save",
             command: this.onSave.bind(this)
         });
@@ -102,12 +102,14 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         items.push("-");
 
         items.push({
-            label: "Load From File",
+            label: "Load From File (JSON)",
+            tooltiptext: "Load from a JSON file created by CCDump",
             command: this.onLoad.bind(this)
         });
 
         items.push({
             label: "Load From CC/GC Log",
+            tooltiptext: "Load from a text file created by nsICycleCollectorListener",
             command: this.onLoadGCLog.bind(this)
         });
 
@@ -212,6 +214,7 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         }
 
         //xxxHonza: close dynamically appended tabs?
+        // Also make sure onClose is executed for each tab object (to stop any timers in progress)
 
         this.tabView.selection = null;
 
