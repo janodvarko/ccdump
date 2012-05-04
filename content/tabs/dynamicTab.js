@@ -36,8 +36,17 @@ DynamicTab.prototype = Lib.extend(BaseTab.prototype,
     {
         Lib.cancelEvent(event);
 
+        this.onClose(event);
+
         // Remove itself from the list of tabs.
         this.tabView.removeTab(this);
+    },
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+    onClose: function(event)
+    {
+        // TODO: overwrite in a derived object.
     }
 });
 
