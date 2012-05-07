@@ -1,7 +1,7 @@
 {
   "name": "ccdump",
   "description": "The best Cycle Collector Analyzer Tool",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "homepage" : "http://www.softwareishard.com/blog/ccdump",
   "engines": {
     "node": ">= 0.6.6"

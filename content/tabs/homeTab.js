@@ -10,10 +10,11 @@ define([
     "app/graphSerializer",
     "lib/options",
     "app/objectTableView",
-    "app/objectFinder"
+    "app/objectFinder",
+    "app/gcLogLoader",
 ],
 function(Domplate, Lib, BaseTab, FBTrace, ObjectTree, Search, GraphSerializer, Options,
-    ObjectTableView, ObjectFinder) {
+    ObjectTableView, ObjectFinder, GCLogLoader) {
 
 with (Domplate) {
 
@@ -73,7 +74,7 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
 
         buttons.push({
             id: "save",
-            tooltiptext: "Save the log into a file",
+            tooltiptext: "Save the log into a file (JSON)",
             className: "save",
             command: this.onSave.bind(this)
         });
@@ -99,9 +100,17 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         });
 
         items.push("-");
+
         items.push({
-            label: "Load From File",
+            label: "Load From File (JSON)",
+            tooltiptext: "Load from a JSON file created by CCDump",
             command: this.onLoad.bind(this)
+        });
+
+        items.push({
+            label: "Load From CC/GC Log",
+            tooltiptext: "Load from a text file created by nsICycleCollectorListener",
+            command: this.onLoadGCLog.bind(this)
         });
 
         return items;
@@ -144,7 +153,6 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         {
             return GraphSerializer.toJSON(self.tabView.analyzer);
         });
-        
     },
 
     onLoad: function()
@@ -153,6 +161,17 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
 
         GraphSerializer.loadFromFile(this.tabView.analyzer);
         this.onFinished(this.tabView.analyzer);
+    },
+
+    onLoadGCLog: function()
+    {
+        this.tabView.analyzer.clear();
+        this.tabView.analyzer.callback = this;
+
+        this.toolbar.disableButton("run");
+
+        var loader = new GCLogLoader(this.tabView.analyzer);
+        loader.loadFromFile();
     },
 
     onCleanUp: function()
@@ -195,6 +214,7 @@ HomeTab.prototype = Lib.extend(BaseTab.prototype,
         }
 
         //xxxHonza: close dynamically appended tabs?
+        // Also make sure onClose is executed for each tab object (to stop any timers in progress)
 
         this.tabView.selection = null;
 
