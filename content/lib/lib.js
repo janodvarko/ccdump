@@ -93,6 +93,7 @@ Lib.dispatch2 = function(listeners, name, args)
             }
         }
     }
+    return undefined;
 };
 
 //***********************************************************************************************//
@@ -149,6 +150,7 @@ Lib.fireEvent = function(element, event, object)
         evt.object = object;
         return !element.dispatchEvent(evt);
     }
+    return undefined;
 }
 
 Lib.cancelEvent = function(event)
@@ -334,7 +336,8 @@ Lib.formatNumber = function(number)
 
 Lib.formatString = function(string)
 {
-    var args = Lib.cloneArray(arguments), string = args.shift();
+    var args = Lib.cloneArray(arguments);
+    string = args.shift();
     for (var i=0; i<args.length; i++)
     {
         var value = args[i].toString();
@@ -769,7 +772,7 @@ Lib.hasClass = function(node, name) // className, className, ...
     {
         for (var i=1; i<arguments.length; ++i)
         {
-            var name = arguments[i];
+            name = arguments[i];
             //var re = new RegExp("(^|\\s)"+name+"($|\\s)");
             //if (!re.exec(node.getAttribute("class")))
             //    return false;
@@ -975,6 +978,7 @@ Lib.getOverflowParent = function(element)
         if (scrollParent.scrollHeight > scrollParent.offsetHeight)
             return scrollParent;
     }
+    return null;
 };
 
 Lib.getElementBox = function(el)

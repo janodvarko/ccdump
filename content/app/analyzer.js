@@ -259,7 +259,7 @@ Analyzer.prototype =
     getObjectGraph: function(o, res, searchGen)
     {
         if (o._searchMark == searchGen || o.garbage)
-            return;
+            return null;
 
         o._searchMark = searchGen;
         res.push(o);
